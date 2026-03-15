@@ -1,8 +1,8 @@
 - type: entity
-  name: Forged Rifle (762x39/556, 635/762x54R)
+  name: forged rifle (762x39/556, 635/762x54R)
   parent: [ BaseWeaponRifle, BaseC1Contraband ]
   id: WeaponRifleForged
-  description: The Forged Rifle
+  description: Looks like it was made in a shed by three sleep deprived gun afficionados that once saw an old earth gun at some point in their life.
   components:
   - type: Sprite
     sprite: _HL\Objects\Weapons\Guns\Rifles\forgedrifle.rsi
@@ -14,7 +14,7 @@
   - type: Clothing
     sprite: _HL\Objects\Weapons\Guns\Rifles\forgedrifle.rsi
   - type: Gun
-    fireRate: 3.5
+    fireRate: 4.5
     burstFireRate: 8
     shotsPerBurst: 3
     burstCooldown: 0.4

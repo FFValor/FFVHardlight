@@ -1,7 +1,7 @@
 - type: entity
   name: WT-440 (46x30mm)
   parent: [ BaseWeaponPistol, BaseC2ContrabandUnredeemable ] # Frontier: BaseSecurityContraband<BaseC2ContrabandUnredeemable
-  id: WeaponPistolWT440
+  id: WeaponPistolWT440446x30mm
   description: A rarely seen modification of the WT550, this high capacity pistol is a cut-down version of the famous SMG, lacking an arm brace or alternate firemodes. Easier to conceal, and with all serial numbers expertly removed. Takes 4.6x30mm WT magazines.
   components:
   - type: Sprite
@@ -65,7 +65,7 @@
 - type: entity
   name: WT-440 (57x28mm)
   parent: [ BaseWeaponPistol, BaseC2ContrabandUnredeemable ] # Frontier: BaseSecurityContraband<BaseC2ContrabandUnredeemable
-  id: WeaponPistolWT440
+  id: WeaponPistolWT44057x28mm
   description: A rarely seen modification of the WT550, this high capacity pistol is a cut-down version of the famous SMG, lacking an arm brace or alternate firemodes. Easier to conceal, and with all serial numbers expertly removed. Takes 5.7x28mm WT magazines.
   components:
   - type: Sprite
