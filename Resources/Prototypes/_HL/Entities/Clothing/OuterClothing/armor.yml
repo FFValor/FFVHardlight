@@ -137,3 +137,25 @@
   - type: ProtectedFromStepTriggers
     slots: WITHOUT_POCKET
 
+
+# Base item for testing purposes.
+
+- type: entity
+  parent: [ClothingOuterStorageBase, AllowSuitStorageClothing, BaseC3SyndicateContraband, ContrabandClothing, ClothingArmorPlateLight] # Frontier: BaseSyndicateContraband<BaseC3SyndicateContraband, add ContrabandClothing
+  id: ClothingOuterArmorPlated
+  name: armor plate vest
+  description: A synthetic armor vest. Meant to hold armor plates.
+  components:
+  - type: Sprite
+    sprite: Clothing/OuterClothing/Vests/webvest.rsi
+  - type: Clothing
+    sprite: Clothing/OuterClothing/Vests/webvest.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.5
+        Slash: 0.5
+        Piercing: 0.5
+        Heat: 0.5
+  - type: ExplosionResistance
+    damageCoefficient: 0.5
