@@ -5,7 +5,7 @@
   description: A rarely seen modification of the WT550, this high capacity pistol is a cut-down version of the famous SMG, lacking an arm brace or alternate firemodes. Easier to conceal, and with all serial numbers expertly removed. Takes 4.6x30mm WT magazines.
   components:
   - type: Sprite
-    sprite: _HL\Objects\Weapons\Guns\Pistols\wt440.rsi
+    sprite: _HL/Objects/Weapons/Guns/Pistols/wt440.rsi
     layers:
       - state: base
         map: ["enum.GunVisualLayers.Base"]
@@ -18,7 +18,7 @@
         map: ["enum.GunVisualLayers.MagUnshaded"]
         shader: unshaded
   - type: Clothing
-    sprite: _HL\Objects\Weapons\Guns\Pistols\wt440.rsi
+    sprite: _HL/Objects/Weapons/Guns/Pistols/wt440.rsi
   - type: Item
     size: Small
     shape:
@@ -69,7 +69,7 @@
   description: A rarely seen modification of the WT550, this high capacity pistol is a cut-down version of the famous SMG, lacking an arm brace or alternate firemodes. Easier to conceal, and with all serial numbers expertly removed. Takes 5.7x28mm WT magazines.
   components:
   - type: Sprite
-    sprite: _HL\Objects\Weapons\Guns\Pistols\wt440.rsi
+    sprite: _HL/Objects/Weapons/Guns/Pistols/wt440.rsi
     layers:
       - state: base
         map: ["enum.GunVisualLayers.Base"]
@@ -82,7 +82,7 @@
         map: ["enum.GunVisualLayers.MagUnshaded"]
         shader: unshaded
   - type: Clothing
-    sprite: _HL\Objects\Weapons\Guns\Pistols\wt440.rsi
+    sprite: _HL/Objects/Weapons/Guns/Pistols/wt440.rsi
   - type: Item
     size: Small
     shape:
