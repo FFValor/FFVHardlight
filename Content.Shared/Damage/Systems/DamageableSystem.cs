@@ -1,4 +1,6 @@
-using System.Linq;
+using Content.Shared._Shitmed.Targeting;
+// Shitmed Change
+using Content.Shared.Body.Systems;
 using Content.Shared.CCVar;
 using Content.Shared.Chemistry;
 using Content.Shared.Damage.Prototypes;
@@ -13,12 +15,10 @@ using Robust.Shared.Configuration;
 using Robust.Shared.GameStates;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Utility;
-
-// Shitmed Change
-using Content.Shared.Body.Systems;
-using Content.Shared._Shitmed.Targeting;
 using Robust.Shared.Random;
+using Robust.Shared.Utility;
+using System.Linq;
+using static Content.Shared.Damage.DamageableSystem;
 
 namespace Content.Shared.Damage
 {
@@ -28,6 +28,7 @@ namespace Content.Shared.Damage
         [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
         [Dependency] private readonly INetManager _netMan = default!;
         [Dependency] private readonly SharedBodySystem _body = default!; // Shitmed Change
+        [Dependency] private readonly IRobustRandom _random = default!; // Shitmed Change
         [Dependency] private readonly MobThresholdSystem _mobThreshold = default!;
         [Dependency] private readonly IConfigurationManager _config = default!;
         [Dependency] private readonly SharedChemistryGuideDataSystem _chemistryGuideData = default!;
@@ -155,7 +156,7 @@ namespace Content.Shared.Damage
         ///     The damage changed event is used by other systems, such as damage thresholds.
         /// </remarks>
         public void DamageChanged(EntityUid uid, DamageableComponent component, DamageSpecifier? damageDelta = null,
-            bool interruptsDoAfters = true, EntityUid? origin = null, bool? canSever = null) // Shitmed Change
+            bool interruptsDoAfters = true, EntityUid? origin = null, bool? canSever = null, float armorPenetration = 0f) // Shitmed Change
         {
             component.Damage.GetDamagePerGroup(_prototypeManager, component.DamagePerGroup);
             component.TotalDamage = component.Damage.GetTotal();
@@ -170,6 +171,13 @@ namespace Content.Shared.Damage
             // TODO DAMAGE
             // byref struct event.
             RaiseLocalEvent(uid, new DamageChangedEvent(component, damageDelta, interruptsDoAfters, origin, canSever ?? true)); // Shitmed Change
+        }
+
+        // Mono: damage origin flags for if we can't or don't want to discern by UID
+        public enum DamageOriginFlag
+        {
+            Explosion, // flag set by ExplosionSystem.Processing
+            Barotrauma // flag set by BarotraumaSystem
         }
 
         /// <summary>
@@ -195,10 +203,12 @@ namespace Content.Shared.Damage
             bool ignoreResistances = false,
             bool interruptsDoAfters = true,
             DamageableComponent? damageable = null,
-            EntityUid? origin = null,
+            EntityUid? origin = null, float armorPenetration = 0f,
             bool ignoreGlobalModifiers = false,
             // Shitmed Change
-            bool? canSever = true, bool? canEvade = false, float? partMultiplier = 1.00f, TargetBodyPart? targetPart = null, EntityUid? tool = null, float armorPenetration = 0)
+            bool? canSever = true, bool? canEvade = false, float? partMultiplier = 1.00f, TargetBodyPart? targetPart = null, EntityUid? tool = null,
+            // Mono: arg to ID indirect damage sources
+            DamageOriginFlag? originFlag = null)
         {
             if (!uid.HasValue || !_damageableQuery.Resolve(uid.Value, ref damageable, false))
             {
@@ -212,7 +222,8 @@ namespace Content.Shared.Damage
                 return damage;
             }
 
-            var before = new BeforeDamageChangedEvent(damage, origin, targetPart); // Shitmed Change
+            var before = new BeforeDamageChangedEvent(damage, origin, targetPart, //Shitmed Change
+                false, originFlag); // Mono: originFlag
             RaiseLocalEvent(uid.Value, ref before);
 
             if (before.Cancelled)
@@ -233,7 +244,11 @@ namespace Content.Shared.Damage
                 if (damageable.DamageModifierSetId != null &&
                     _prototypeManager.Resolve(damageable.DamageModifierSetId, out var modifierSet)) // HardLight: Not sure where it came from, but upstream had Resolve while we had TryIndex. Commenting in case that becomes important later.
                 {
-                    damage = DamageSpecifier.ApplyModifierSet(damage, modifierSet);
+                    // TODO DAMAGE PERFORMANCE
+                    // use a local private field instead of creating a new dictionary here..
+                    // TODO: We need to add a check to see if the given armor covers the targeted part (if any) to modify or not.
+                    damage = DamageSpecifier.ApplyModifierSet(damage,
+                        DamageSpecifier.PenetrateArmor(modifierSet, armorPenetration)); // Goob edit
                 }
 
                 // TODO DAMAGE
@@ -424,7 +439,7 @@ namespace Content.Shared.Damage
                 damage.DamageDict.Add(typeId, damageValue);
             }
 
-            TryChangeDamage(uid, damage, interruptsDoAfters: false, origin: args.Origin);
+            TryChangeDamage(uid, damage, interruptsDoAfters: false);
         }
 
         private void OnRejuvenate(EntityUid uid, DamageableComponent component, RejuvenateEvent args)
@@ -467,7 +482,8 @@ namespace Content.Shared.Damage
         DamageSpecifier Damage,
         EntityUid? Origin = null,
         TargetBodyPart? TargetPart = null, // Shitmed Change
-        bool Cancelled = false);
+        bool Cancelled = false,
+        DamageOriginFlag? OriginFlag = null); // Mono: OriginFlag
 
     /// <summary>
     ///     Shitmed Change: Raised on parts before damage is done so we can cancel the damage if they evade.
@@ -499,8 +515,8 @@ namespace Content.Shared.Damage
         public readonly DamageSpecifier OriginalDamage;
         public DamageSpecifier Damage;
         public EntityUid? Origin;
+        public float ArmorPenetration; // Goobstation
         public readonly TargetBodyPart? TargetPart; // Shitmed Change
-        public readonly float ArmorPenetration = 0; // Goobstation
         public EntityUid? Tool;
 
         public DamageModifyEvent(DamageSpecifier damage, EntityUid? origin = null, float armorPenetration = 0, TargetBodyPart? targetPart = null, EntityUid? tool = null) // Shitmed Change
