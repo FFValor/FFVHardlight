@@ -1,14 +1,25 @@
+using Content.Shared.Containers.ItemSlots; // HardLight
 using Robust.Shared.GameStates;
 
 namespace Content.Shared._Mono.ArmorPlate;
 
 /// <summary>
-/// Component for clothes that can hold armor plates in their storage.
+/// Component for clothes that can hold an armor plate in a dedicated slot. // HardLight
 /// </summary>
 [RegisterComponent, NetworkedComponent]
 [AutoGenerateComponentState]
 public sealed partial class ArmorPlateHolderComponent : Component
 {
+    // HardLight start: Moved plate storage to a dedicated item slot to simplify logic and allow for better interactions with container systems.
+    public const string PlateSlotId = "armor_plate";
+
+    /// <summary>
+    /// The item slot used to hold the installed armor plate.
+    /// </summary>
+    [DataField("plateSlot")]
+    public ItemSlot PlateSlot = new();
+    // HardLight end
+
     /// <summary>
     /// Reference to the currently active armor plate entity.
     /// </summary>
