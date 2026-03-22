@@ -3,14 +3,15 @@ using Content.Shared.Damage;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
+using Content.Shared.Containers.ItemSlots; // HardLight
 using Content.Shared.Inventory;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Movement.Systems;
 using Content.Shared.Popups;
-using Content.Shared.Storage;
+// using Content.Shared.Storage; // HardLight
 using Content.Shared.Verbs;
 using Robust.Shared.Containers;
-using Robust.Shared.Timing;
+// using Robust.Shared.Timing; // HardLight
 using Robust.Shared.Utility;
 
 namespace Content.Shared._Mono.ArmorPlate;
@@ -23,16 +24,20 @@ public sealed class SharedArmorPlateSystem : EntitySystem
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
     [Dependency] private readonly ExamineSystemShared _examine = default!;
-    [Dependency] private readonly IGameTiming _timing = default!;
+    // [Dependency] private readonly IGameTiming _timing = default!; // HardLight
     [Dependency] private readonly StaminaSystem _stamina = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
+    [Dependency] private readonly ItemSlotsSystem _itemSlots = default!; // HardLight
 
     public override void Initialize()
     {
         base.Initialize();
 
+        SubscribeLocalEvent<ArmorPlateHolderComponent, ComponentInit>(OnHolderInit); // HardLight
+        SubscribeLocalEvent<ArmorPlateHolderComponent, ComponentRemove>(OnHolderRemove); // HardLight
+        SubscribeLocalEvent<ArmorPlateHolderComponent, ItemSlotInsertAttemptEvent>(OnPlateInsertAttempt); // HardLight
         SubscribeLocalEvent<ArmorPlateHolderComponent, EntInsertedIntoContainerMessage>(OnPlateInserted);
         SubscribeLocalEvent<ArmorPlateHolderComponent, EntRemovedFromContainerMessage>(OnPlateRemoved);
         SubscribeLocalEvent<ArmorPlateHolderComponent, GotEquippedEvent>(OnEquippedArmor);
@@ -43,6 +48,24 @@ public sealed class SharedArmorPlateSystem : EntitySystem
         SubscribeLocalEvent<ArmorPlateItemComponent, EntityTerminatingEvent>(OnPlateDestroyed);
         SubscribeLocalEvent<ArmorPlateProtectedComponent, BeforeDamageChangedEvent>(OnBeforeDamageChanged);
     }
+
+    // HardLight start: Added item slot management for the armor plate slot and validation on insertion to ensure only valid plates can be inserted.
+    private void OnHolderInit(EntityUid uid, ArmorPlateHolderComponent component, ComponentInit args)
+    {
+        _itemSlots.AddItemSlot(uid, ArmorPlateHolderComponent.PlateSlotId, component.PlateSlot);
+    }
+
+    private void OnHolderRemove(EntityUid uid, ArmorPlateHolderComponent component, ComponentRemove args)
+    {
+        _itemSlots.RemoveItemSlot(uid, component.PlateSlot);
+    }
+
+    private void OnPlateInsertAttempt(Entity<ArmorPlateHolderComponent> ent, ref ItemSlotInsertAttemptEvent args)
+    {
+        if (!HasComp<ArmorPlateItemComponent>(args.Item))
+            args.Cancelled = true;
+    }
+    // HardLight end
 
     public void OnBeforeDamageChanged(Entity<ArmorPlateProtectedComponent> ent, ref BeforeDamageChangedEvent args)
     {
@@ -73,7 +96,7 @@ public sealed class SharedArmorPlateSystem : EntitySystem
             CalcPlateDamages(args.Damage, plate.Comp, out var remainder, out var absorbed, out var plateDamage);
 
             // Damage to plate, stamina damage to holder
-            AbsorbDamage(ent, equipped.Value, holder, plate, absorbed, plateDamage);
+            AbsorbDamage(ent, plate, absorbed, plateDamage); // HardLight: Removed equipped.Value and holder
 
             // Full absorption, done
             if (remainder.Empty)
@@ -91,8 +114,8 @@ public sealed class SharedArmorPlateSystem : EntitySystem
 
     private void AbsorbDamage(
         EntityUid wearer,
-        EntityUid armorUid,
-        ArmorPlateHolderComponent holder,
+        // EntityUid armorUid, // HardLight
+        // ArmorPlateHolderComponent holder, // HardLight
         Entity<ArmorPlateItemComponent> plate,
         FixedPoint2 absorbed,
         FixedPoint2 plateDamage)
@@ -109,7 +132,7 @@ public sealed class SharedArmorPlateSystem : EntitySystem
 
     private void OnPlateInserted(Entity<ArmorPlateHolderComponent> ent, ref EntInsertedIntoContainerMessage args)
     {
-        if (args.Container.ID != StorageComponent.ContainerId)
+        if (args.Container.ID != ent.Comp.PlateSlot.ID) // HardLight: StorageComponent.ContainerId<ent.Comp.PlateSlot.ID
             return;
 
         var insertedEntity = args.Entity;
@@ -127,7 +150,7 @@ public sealed class SharedArmorPlateSystem : EntitySystem
 
     private void OnPlateRemoved(Entity<ArmorPlateHolderComponent> ent, ref EntRemovedFromContainerMessage args)
     {
-        if (args.Container.ID != StorageComponent.ContainerId)
+        if (args.Container.ID != ent.Comp.PlateSlot.ID) // HardLight: StorageComponent.ContainerId<ent.Comp.PlateSlot.ID
             return;
 
         var removedEntity = args.Entity;
@@ -138,26 +161,28 @@ public sealed class SharedArmorPlateSystem : EntitySystem
 
         ClearActivePlate(ent, holder);
 
-        if (TryComp<StorageComponent>(ent, out var storage))
-        {
-            foreach (var item in storage.Container.ContainedEntities)
-            {
-                if (TryComp<ArmorPlateItemComponent>(item, out var plateComp))
-                {
-                    SetActivePlate(ent, item, plateComp, holder);
-                    break;
-                }
-            }
-        }
+        // HardLight start
+        // if (TryComp<StorageComponent>(ent, out var storage))
+        // {
+        //     foreach (var item in storage.Container.ContainedEntities)
+        //     {
+        //         if (TryComp<ArmorPlateItemComponent>(item, out var plateComp))
+        //         {
+        //             SetActivePlate(ent, item, plateComp, holder);
+        //             break;
+        //         }
+        //     }
+        // }
+        // HardLight end
     }
 
     private void OnExamined(Entity<ArmorPlateHolderComponent> ent, ref ExaminedEvent args)
     {
         var holder = ent.Comp;
 
-        if (!TryComp<StorageComponent>(ent, out _))
+        if (!_itemSlots.TryGetSlot(ent, ArmorPlateHolderComponent.PlateSlotId, out _)) // HardLight
         {
-            args.PushMarkup(Loc.GetString("armor-plate-examine-no-storage"));
+            args.PushMarkup(Loc.GetString("armor-plate-examine-no-slot")); // HardLight: -storage<-slot
             return;
         }
 
@@ -402,6 +427,9 @@ public sealed class SharedArmorPlateSystem : EntitySystem
 
         var holderUid = container.Owner;
         if (!TryComp<ArmorPlateHolderComponent>(holderUid, out var holder))
+            return;
+
+        if (container.ID != holder.PlateSlot.ID) // HardLight
             return;
 
         if (holder.ActivePlate != ent.Owner)
