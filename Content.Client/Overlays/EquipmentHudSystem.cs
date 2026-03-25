@@ -14,6 +14,7 @@ public abstract class EquipmentHudSystem<T> : EntitySystem where T : IComponent
 {
     [Dependency] private readonly IPlayerManager _player = default!;
 
+    [ViewVariables]
     protected bool IsActive;
     protected virtual SlotFlags TargetSlots => ~SlotFlags.POCKET;
 
@@ -32,8 +33,8 @@ public abstract class EquipmentHudSystem<T> : EntitySystem where T : IComponent
 
         SubscribeLocalEvent<T, RefreshEquipmentHudEvent<T>>(OnRefreshComponentHud);
         SubscribeLocalEvent<T, InventoryRelayedEvent<RefreshEquipmentHudEvent<T>>>(OnRefreshEquipmentHud);
-/*
-        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart); */
+
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart);
     }
 
     private void Update(RefreshEquipmentHudEvent<T> ev)
@@ -86,14 +87,17 @@ public abstract class EquipmentHudSystem<T> : EntitySystem where T : IComponent
         RefreshOverlay();
     }
 
-/*     private void OnRoundRestart(RoundRestartCleanupEvent args)
+    private void OnRoundRestart(RoundRestartCleanupEvent args)
     {
         Deactivate();
-    } */
+    }
 
     protected virtual void OnRefreshEquipmentHud(Entity<T> ent, ref InventoryRelayedEvent<RefreshEquipmentHudEvent<T>> args)
     {
-        OnRefreshComponentHud(ent, ref args.Args);
+        // Goob edit start
+        args.Args.Active = true;
+        args.Args.Components.Add(ent);
+        // Goob edit end
     }
 
     protected virtual void OnRefreshComponentHud(Entity<T> ent, ref RefreshEquipmentHudEvent<T> args)
