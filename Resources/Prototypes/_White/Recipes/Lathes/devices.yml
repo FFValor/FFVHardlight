@@ -1,6 +1,6 @@
 - type: latheRecipe
-  id: ClothingEyesNightVisionGoggles
-  result: ClothingEyesNightVisionGoggles
+  id: ClothingEyesNVHudGoggles
+  result: ClothingEyesNVHudGoggles
   completetime: 2
   materials:
     Steel: 200
@@ -9,8 +9,8 @@
     Gold: 100
 
 - type: latheRecipe
-  id: ClothingEyesThermalVisionGoggles
-  result: ClothingEyesThermalVisionGoggles
+  id: ClothingEyesIRHudGoggles
+  result: ClothingEyesIRHudGoggles
   completetime: 2
   materials:
     Steel: 200
