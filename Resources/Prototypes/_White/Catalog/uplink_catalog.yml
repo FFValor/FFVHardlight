@@ -4,7 +4,7 @@
   id: UplinkNightGoggles
   name: uplink-night-vision-name
   description: uplink-night-vision-desc
-  productEntity: ClothingEyesNightVisionGogglesSyndie
+  productEntity: ClothingEyesNVHudGogglesSyndie
   cost:
     Telecrystal: 10
   categories:
@@ -19,7 +19,7 @@
   id: UplinkNightGogglesNukie
   name: uplink-night-vision-name
   description: uplink-night-vision-desc
-  productEntity: ClothingEyesNightVisionGogglesNukie
+  productEntity: ClothingEyesNVHudGogglesNukie
   cost:
     Telecrystal: 10
   categories:
@@ -36,7 +36,7 @@
   id: UplinkThermalGoggles
   name: uplink-thermal-vision-name
   description: uplink-thermal-vision-desc
-  productEntity: ClothingEyesThermalVisionGogglesSyndie
+  productEntity: ClothingEyesIRHudGogglesSyndie
   cost:
     Telecrystal: 10
   categories:
@@ -51,7 +51,7 @@
   id: UplinkThermalGogglesNukie
   name: uplink-thermal-vision-name
   description: uplink-thermal-vision-desc
-  productEntity: ClothingEyesThermalVisionGogglesNukie
+  productEntity: ClothingEyesIRHudGogglesNukie
   cost:
     Telecrystal: 10
   categories:

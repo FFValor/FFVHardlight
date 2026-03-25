@@ -1,7 +1,7 @@
 # Tier 2
 
 - type: technology
-  id: NightVisionTech
+  id: NVHudTech
   name: research-technology-night-vision
   icon:
     sprite: _White/Clothing/Eyes/Goggles/nightvision.rsi
@@ -10,13 +10,13 @@
   tier: 2
   cost: 20000
   recipeUnlocks:
-  - ClothingEyesNightVisionGoggles
+  - ClothingEyesNVHudGoggles
   technologyPrerequisites:
   - SuperParts
   position: 1, 15
 
 - type: technology
-  id: ThermalVisionTech
+  id: IRHudTech
   name: research-technology-thermal-vision
   icon:
     sprite: _White/Clothing/Eyes/Goggles/thermal.rsi
@@ -25,7 +25,7 @@
   tier: 2
   cost: 15000
   recipeUnlocks:
-  - ClothingEyesThermalVisionGoggles
+  - ClothingEyesIRHudGoggles
   technologyPrerequisites:
-  - NightVisionTech
+  - NVHudTech
   position: 2, 15

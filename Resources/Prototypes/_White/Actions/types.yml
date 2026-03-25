@@ -1,5 +1,5 @@
 - type: entity
-  id: ToggleNightVision
+  id: ToggleNVHud
   name: Toggle Night Vision
   description: Toggles night vision.
   categories: [ HideSpawnMenu ]
@@ -11,10 +11,10 @@
     icon:
       sprite: _White/Clothing/Eyes/Goggles/nightvision.rsi
       state: icon
-    event: !type:ToggleNightVisionEvent
+    event: !type:ToggleNVHudEvent
 
 - type: entity
-  id: ToggleThermalVision
+  id: ToggleIRHud
   name: Toggle Thermal Vision
   description: Toggles thermal vision.
   categories: [ HideSpawnMenu ]
@@ -26,11 +26,11 @@
     icon:
       sprite: _White/Clothing/Eyes/Goggles/thermal.rsi
       state: icon
-    event: !type:ToggleThermalVisionEvent
+    event: !type:ToggleIRHudEvent
 
 - type: entity
-  id: PulseThermalVision
-  parent: ToggleThermalVision
+  id: PulseIRHud
+  parent: ToggleIRHud
   name: Pulse Thermal Vision
   description: Activate thermal vision temporarily.
   categories: [ HideSpawnMenu ]

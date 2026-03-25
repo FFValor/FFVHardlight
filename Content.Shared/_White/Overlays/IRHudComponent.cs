@@ -5,9 +5,9 @@ using Robust.Shared.Prototypes;
 namespace Content.Shared._White.Overlays;
 
 [RegisterComponent, NetworkedComponent]
-public sealed partial class ThermalVisionComponent : SwitchableVisionOverlayComponent
+public sealed partial class IRHudComponent : SwitchableVisionOverlayComponent
 {
-    public override EntProtoId? ToggleAction { get; set; } = "ToggleThermalVision";
+    public override EntProtoId? ToggleAction { get; set; } = "ToggleIRHud";
 
     public override Color Color { get; set; } = Color.FromHex("#d06764");
 
@@ -15,4 +15,4 @@ public sealed partial class ThermalVisionComponent : SwitchableVisionOverlayComp
     public float LightRadius = 2f;
 }
 
-public sealed partial class ToggleThermalVisionEvent : InstantActionEvent;
+public sealed partial class ToggleIRHudEvent : InstantActionEvent;
