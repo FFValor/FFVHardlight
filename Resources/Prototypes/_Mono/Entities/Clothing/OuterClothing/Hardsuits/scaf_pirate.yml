@@ -31,9 +31,7 @@
     sprintModifier: 0.9
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitPirateScaf
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitPirateScaf
   - type: StaticPrice
     price: 750
     vendPrice: 2500

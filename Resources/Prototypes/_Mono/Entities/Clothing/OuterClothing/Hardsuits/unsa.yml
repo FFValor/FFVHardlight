@@ -30,9 +30,7 @@
     sprintModifier: 0.92
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitUNSAArmoredEva
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitUNSAArmoredEva
   - type: StaticPrice
     price: 500
     vendPrice: 2000

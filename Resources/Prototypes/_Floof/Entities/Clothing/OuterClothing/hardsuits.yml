@@ -14,7 +14,7 @@
   #   coefficient: 0.5 # 50%
 
 - type: entity
-  parent: [ClothingOuterEVASuitBase, ClothingOuterStorageBase]
+  parent: [ClothingOuterHardsuitBase, ClothingOuterStorageBase]
   id: ClothingOuterHardsuitFreelancerPilot
   name: FL-02bt - "Pilot" Freelancer Softsuit
   description: A armored soft suit. "Maximum speed for minimal protection."
@@ -37,11 +37,13 @@
   - type: ClothingSpeedModifier
     walkModifier: 1.0
     sprintModifier: 1.0
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetPilot
   # - type: StaminaDamageResistance #Hardlight: We don't use this.
   #   coefficient: 0.60
 
 - type: entity
-  parent: [ClothingOuterEVASuitBase, ClothingOuterStorageBase]
+  parent: [ClothingOuterHardsuitBase, ClothingOuterStorageBase]
   id: ClothingOuterHardsuitFreelancerLegion
   name: FL-03a - "Legion" Freelancer Softsuit
   description: A medium armored soft suit. "You ask if its reliable? We say a ton."
@@ -64,12 +66,14 @@
   - type: ClothingSpeedModifier
     walkModifier: 0.90
     sprintModifier: 0.90
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetOcular
   # - type: StaminaDamageResistance #Hardlight: We don't use this.
   #   coefficient: 0.60
 
 
 - type: entity
-  parent: [ClothingOuterEVASuitBase, ClothingOuterStorageBase]
+  parent: [ClothingOuterHardsuitBase, ClothingOuterStorageBase]
   id: ClothingOuterHardsuitFreelancerNorthstar
   name: FL-04x - "Northstar" Freelancer Softsuit
   description: A medium armored soft suit with build and advanced non functioning cloaking system. "When the clouds clear you will see the light of the Northstar"
@@ -92,5 +96,7 @@
   - type: ClothingSpeedModifier
     walkModifier: 0.90
     sprintModifier: 0.90
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetStar
   # - type: StaminaDamageResistance #Hardlight: We don't use this.
   #   coefficient: 0.40
