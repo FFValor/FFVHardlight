@@ -9,12 +9,7 @@
   - type: Clothing
     sprite: _Mono/Clothing/OuterClothing/Hardsuits/syndicate.rsi
   - type: ToggleableClothing
-#    requiredSlot: outerclothing
-#    blockUnequipWhenAttached: false
-#    replaceCurrentClothing: true
-    clothingPrototypes: ClothingHeadHelmetHardsuitAshen
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitAshen
   - type: Tag
     tags:
     - RogueHardsuit
@@ -30,12 +25,7 @@
   - type: Clothing
     sprite: _Mono/Clothing/OuterClothing/Hardsuits/pdv_vizier.rsi
   - type: ToggleableClothing
-#    requiredSlot: outerclothing
-#    blockUnequipWhenAttached: false
-#    replaceCurrentClothing: true
-    clothingPrototypes: ClothingHeadHelmetHardsuitVizier
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitVizier
   - type: Tag
     tags:
     - RogueHardsuit
@@ -51,12 +41,7 @@
   - type: Clothing
     sprite: _Mono/Clothing/OuterClothing/Hardsuits/syndieelite.rsi
   - type: ToggleableClothing
-#    requiredSlot: outerclothing
-#    blockUnequipWhenAttached: false
-#    replaceCurrentClothing: true
-    clothingPrototypes: ClothingHeadHelmetHardsuitAshenElite
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitAshenElite
   - type: ExplosionResistance
     damageCoefficient: 0.2
   - type: FireProtection

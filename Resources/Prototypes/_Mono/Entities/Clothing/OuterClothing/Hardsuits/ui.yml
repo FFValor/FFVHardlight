@@ -27,9 +27,7 @@
     sprintModifier: 0.825
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHelmetHardsuitUIEnforcer
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHelmetHardsuitUIEnforcer
 #  - type: StaminaDamageResistance # Hardlight - Stunmeta
 #    coefficient: 0.55
 
@@ -81,9 +79,7 @@
     sprintModifier: 0.85 # Temporary till shield toggling doesnt break movement speed modifiers
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHelmetHardsuitUIEnforcerMKII # Ullman Enforcer MKII helmet
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHelmetHardsuitUIEnforcerMKII # Ullman Enforcer MKII helmet
 #  - type: StaminaDamageResistance # Hardlight - Stunmeta
 #    coefficient: 0.45
 
@@ -116,9 +112,7 @@
     sprintModifier: 0.8
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHelmetHardsuitUIEngineer
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHelmetHardsuitUIEngineer
 #  - type: StaminaDamageResistance # Hardlight - Stunmeta
 #    coefficient: 0.8
 
@@ -152,9 +146,7 @@
     sprintModifier: 0.95
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHelmetHardsuitUIPilot
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHelmetHardsuitUIPilot
 #  - type: StaminaDamageResistance # Hardlight - Stunmeta
 #    coefficient: 0.7
 
@@ -187,9 +179,7 @@
     sprintModifier: 0.80
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHelmetHardsuitUIDirector
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHelmetHardsuitUIDirector
 #  - type: StaminaDamageResistance # Hardlight - Stunmeta
 #    coefficient: 0.35
 

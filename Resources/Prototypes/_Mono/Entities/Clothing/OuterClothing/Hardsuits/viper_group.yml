@@ -31,9 +31,7 @@
     sprintModifier: 0.85
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitViperGroupStandard
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitViperGroupStandard
   - type: StaticPrice
     price: 1500
     vendPrice: 4000
@@ -74,9 +72,7 @@
     sprintModifier: 1
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitViperGroupMedic
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitViperGroupMedic
   - type: StaticPrice
     price: 1500
     vendPrice: 4000
@@ -117,9 +113,7 @@
     sprintModifier: 0.75
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitViperGroupJuggernaut
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitViperGroupJuggernaut
   - type: StaticPrice
     price: 2500
     vendPrice: 4000

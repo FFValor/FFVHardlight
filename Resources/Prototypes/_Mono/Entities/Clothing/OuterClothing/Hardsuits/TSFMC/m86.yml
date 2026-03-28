@@ -32,9 +32,7 @@
     sprintModifier: 0.8
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitM86
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitM86
   - type: StaticPrice
     price: 7500
     vendPrice: 1000
