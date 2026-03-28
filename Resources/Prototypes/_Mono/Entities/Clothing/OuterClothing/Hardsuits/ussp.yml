@@ -31,9 +31,7 @@
     sprintModifier: 0.8
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitUsspL27
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitUsspL27
   - type: StaticPrice
     price: 1250
     vendPrice: 7500
@@ -73,9 +71,7 @@
     sprintModifier: 1
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitUsspL10
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitUsspL10
   - type: StaticPrice
     price: 420
     vendPrice: 2500
@@ -115,9 +111,7 @@
     sprintModifier: 0.95
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitUsspL10A
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitUsspL10A
   - type: StaticPrice
     price: 500
     vendPrice: 3000
@@ -156,9 +150,7 @@
     walkModifier: 0.95
     sprintModifier: 0.95
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitUsspM10
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitUsspM10
   - type: StaticPrice
     price: 1350
     vendPrice: 8000
@@ -198,9 +190,7 @@
     sprintModifier: 0.95
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitUsspL30
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitUsspL30
   - type: StaticPrice
     price: 3300
     vendPrice: 20000
@@ -240,9 +230,7 @@
     sprintModifier: 0.90
   - type: HeldSpeedModifier
   - type: ToggleableClothing
-    clothingPrototypes: ClothingHeadHelmetHardsuitOfficerCombat
-#      helmetcover: ClothingHeadHelmetCoverBlock
-#      helmetattachment: ClothingHeadHelmetAttachmentBlock
+    clothingPrototype: ClothingHeadHelmetHardsuitOfficerCombat
   - type: StaticPrice
     price: 4200
     vendPrice: 25000
