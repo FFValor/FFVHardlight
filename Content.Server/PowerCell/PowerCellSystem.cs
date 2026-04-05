@@ -10,7 +10,6 @@ using Content.Server.Kitchen.Components;
 using Content.Server.Power.EntitySystems;
 using Content.Server.UserInterface;
 using Content.Shared.Containers.ItemSlots;
-using Content.Shared.Mech.Components;
 using Content.Shared.Popups;
 using ActivatableUISystem = Content.Shared.UserInterface.ActivatableUISystem;
 
@@ -78,12 +77,6 @@ public sealed partial class PowerCellSystem : SharedPowerCellSystem
         {
             if (itemSlot.Item == uid)
                 RaiseLocalEvent(container.Owner, new PowerCellChangedEvent(false));
-        }
-        // Mono edit - Also check if there are any batteries in mech
-        else if (_containerSystem.TryGetContainingContainer((uid, null, null), out var mechContainer)
-                 && mechContainer.Contains(uid))
-        {
-            RaiseLocalEvent(mechContainer.Owner, new PowerCellChangedEvent(false));
         }
     }
 
@@ -238,13 +231,13 @@ public sealed partial class PowerCellSystem : SharedPowerCellSystem
 
     private void OnCellSlotExamined(EntityUid uid, PowerCellSlotComponent component, ExaminedEvent args)
     {
-        TryGetBatteryFromSlot(uid, out var batteryEnt, out var battery); // Goobstation
-        OnBatteryExamined(batteryEnt.GetValueOrDefault(uid), battery, args); // Goobstation
+        TryGetBatteryFromSlot(uid, out var battery);
+        OnBatteryExamined(uid, battery, args);
     }
 
-    public void OnBatteryExamined(EntityUid uid, BatteryComponent? component, ExaminedEvent args) // WD EDIT
+    private void OnBatteryExamined(EntityUid uid, BatteryComponent? component, ExaminedEvent args)
     {
-        if (Resolve(uid, ref component, false)) // WD EDIT
+        if (component != null)
         {
             var charge = component.CurrentCharge / component.MaxCharge * 100;
             args.PushMarkup(Loc.GetString("power-cell-component-examine-details", ("currentCharge", $"{charge:F0}")));
