@@ -33,9 +33,8 @@ public sealed class RechargeableBlockingSystem : SharedBlockingSystem // Mono
         {
             if (TryComp<BatteryComponent>(uid, out var batteryComponent))
             {
-                args.PushMarkup(Loc.GetString("examinable-battery-component-examine-detail",
-                    ("charge", Math.Round(batteryComponent.CurrentCharge, 2)),
-                    ("max", Math.Round(batteryComponent.MaxCharge, 2))));
+                var percentage = Math.Round((batteryComponent.CurrentCharge / batteryComponent.MaxCharge) * 100, 0);
+                args.PushMarkup(Loc.GetString("power-cell-component-examine-details", ("currentCharge", $"{percentage:F0}")));
             }
             return;
         }

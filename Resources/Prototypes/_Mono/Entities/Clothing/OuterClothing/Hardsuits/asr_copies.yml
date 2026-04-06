@@ -61,16 +61,16 @@
   - type: Blocking
     passiveBlockModifier:
       coefficients:
-        Blunt: 0.1
-        Slash: 0.1
-        Piercing: 0.1
-        Heat: 0.1
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.7
+        Heat: 0.2
     activeBlockModifier:
       coefficients:
-        Blunt: 0.1
-        Slash: 0.1
-        Piercing: 0.1
-        Heat: 0.1
+        Blunt: 0.8
+        Slash: 0.8
+        Piercing: 0.7
+        Heat: 0.2
       flatReductions:
         Heat: 5
     passiveBlockFraction: 1.0
