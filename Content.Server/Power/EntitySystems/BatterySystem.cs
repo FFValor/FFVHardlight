@@ -1,13 +1,16 @@
+using System.Diagnostics.CodeAnalysis;
 using Content.Server.Cargo.Systems;
 using Content.Server.Emp;
+using Content.Shared.Emp; // Frontier: Upstream - #28984
 using Content.Server.Power.Components;
 using Content.Shared.Examine;
 using Content.Shared.Rejuvenate;
 using Content.Shared.Timing;
 using JetBrains.Annotations;
-using Robust.Shared.Collections;
+using Robust.Shared.Containers;
 using Robust.Shared.Utility;
 using Robust.Shared.Timing;
+using Content.Server._NF.Power.Components; // Frontier
 
 namespace Content.Server.Power.EntitySystems
 {
@@ -16,12 +19,7 @@ namespace Content.Server.Power.EntitySystems
     {
         [Dependency] private readonly IGameTiming _timing = default!;
 
-        // Reused to avoid a fresh ValueList backing array per tick / per net sync.
-        // Two separate fields so PostSync and Update cannot stomp on each other if any
-        // ChargeChangedEvent subscriber were ever to re-raise either event.
-        private readonly List<(EntityUid Uid, float Charge)> _scratchPostSyncUpdates = new();
-        private readonly List<(EntityUid Uid, float Charge)> _scratchAutoRechargeUpdates = new();
-        [Dependency] private readonly IGameTiming _timing = default!;
+        [Dependency] private readonly SharedContainerSystem _containers = default!; // WD EDIT
 
         public override void Initialize()
         {
@@ -59,7 +57,7 @@ namespace Content.Server.Power.EntitySystems
                 if (effectiveMax == 0)
                     effectiveMax = 1;
                 var chargeFraction = batteryComponent.CurrentCharge / effectiveMax;
-                var chargePercentRounded = (int) (chargeFraction * 100);
+                var chargePercentRounded = (int)(chargeFraction * 100);
                 args.PushMarkup(
                     Loc.GetString(
                         "examinable-battery-component-examine-detail",
@@ -272,5 +270,33 @@ namespace Content.Server.Power.EntitySystems
 
             return battery.CurrentCharge >= battery.MaxCharge;
         }
+
+        // WD EDIT START
+        public bool TryGetBatteryComponent(EntityUid uid, [NotNullWhen(true)] out BatteryComponent? battery,
+            [NotNullWhen(true)] out EntityUid? batteryUid)
+        {
+            if (TryComp(uid, out battery))
+            {
+                batteryUid = uid;
+                return true;
+            }
+
+            if (!_containers.TryGetContainer(uid, "cell_slot", out var container)
+                || container is not ContainerSlot slot)
+            {
+                battery = null;
+                batteryUid = null;
+                return false;
+            }
+
+            batteryUid = slot.ContainedEntity;
+
+            if (batteryUid != null)
+                return TryComp(batteryUid, out battery);
+
+            battery = null;
+            return false;
+        }
+        // WD EDIT END
     }
 }

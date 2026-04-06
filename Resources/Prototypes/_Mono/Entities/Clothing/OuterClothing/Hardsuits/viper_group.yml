@@ -36,8 +36,7 @@
     price: 1500
     vendPrice: 4000
   - type: Tag  # Mono
-    tags:
-    - RogueHardsuit
+
 
 - type: entity
   parent: [ ClothingOuterHardsuitBase, BaseFactionGearPDVT2 ]
@@ -77,8 +76,7 @@
     price: 1500
     vendPrice: 4000
   - type: Tag  # Mono
-    tags:
-    - RogueHardsuit
+
 
 - type: entity
   parent: [ ClothingOuterHardsuitBase, BaseFactionGearPDVT2 ]
@@ -118,5 +116,4 @@
     price: 2500
     vendPrice: 4000
   - type: Tag  # Mono
-    tags:
-    - RogueHardsuit
+

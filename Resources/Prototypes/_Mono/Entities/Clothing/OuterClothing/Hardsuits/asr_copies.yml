@@ -10,9 +10,7 @@
     sprite: _Mono/Clothing/OuterClothing/Hardsuits/syndicate.rsi
   - type: ToggleableClothing
     clothingPrototype: ClothingHeadHelmetHardsuitAshen
-  - type: Tag
-    tags:
-    - RogueHardsuit
+
 
 - type: entity
   parent: ClothingOuterHardsuitSyndieCommander
@@ -26,9 +24,7 @@
     sprite: _Mono/Clothing/OuterClothing/Hardsuits/pdv_vizier.rsi
   - type: ToggleableClothing
     clothingPrototype: ClothingHeadHelmetHardsuitVizier
-  - type: Tag
-    tags:
-    - RogueHardsuit
+
 
 - type: entity
   parent: [ ClothingOuterHardsuitSyndieElite, EnergyShieldClothing ]
@@ -60,9 +56,7 @@
   - type: ClothingSpeedModifier
     walkModifier: 1.0
     sprintModifier: 1.0 # 0.9-> 1 Mono
-  - type: Tag
-    tags:
-    - RogueHardsuit
+
   # Shielding
   - type: Blocking
     passiveBlockModifier:
