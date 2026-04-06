@@ -31,7 +31,12 @@ public sealed class RechargeableBlockingSystem : SharedBlockingSystem // Mono
     {
         if (!component.Discharged)
         {
-            _powerCell.OnBatteryExamined(uid, null, args);
+            if (TryComp<BatteryComponent>(uid, out var batteryComponent))
+            {
+                args.PushMarkup(Loc.GetString("examinable-battery-component-examine-detail",
+                    ("charge", Math.Round(batteryComponent.CurrentCharge, 2)),
+                    ("max", Math.Round(batteryComponent.MaxCharge, 2))));
+            }
             return;
         }
 
