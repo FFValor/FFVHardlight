@@ -303,10 +303,10 @@ public sealed partial class SalvageSystem
         expedition.ReturnTriggered = true;
 
         const float ftlTime = 20f; // 20 seconds FTL time for early finish
-        var shuttleQuery = AllEntityQuery<ShuttleComponent, TransformComponent>();
+        var shuttleQuery = EntityQueryEnumerator<ShuttleComponent, TransformComponent, ExpeditionParticipantShuttleComponent>();
 
         // Find shuttles on the expedition map and FTL them home
-        while (shuttleQuery.MoveNext(out var shuttleUid, out var shuttle, out var shuttleXform))
+        while (shuttleQuery.MoveNext(out var shuttleUid, out var shuttle, out var shuttleXform, out _))
         {
             if (shuttleXform.MapUid != expeditionMapUid || TryComp(shuttleUid, out FTLComponent? _))
                 continue;

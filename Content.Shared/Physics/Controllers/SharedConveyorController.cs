@@ -40,6 +40,16 @@ public abstract class SharedConveyorController : VirtualController
 
     protected HashSet<EntityUid> Intersecting = new();
 
+    // Cached CVar value. Previously HasPlayerInRange called _cfg.GetCVar(CVars.NetMaxUpdateRange)
+    // for every conveyed entity, every tick - that's a dictionary lookup per item per frame.
+    // Refreshed via OnValueChanged so behavior is identical.
+    private float _netMaxUpdateRange;
+
+    // Reused per-tick scratch buffers for UpdateBeforeSolve. Replaces a fresh Dictionary +
+    // HashSet allocation every physics tick. Cleared at the top of each call.
+    private readonly Dictionary<EntityUid, int> _selected = new();
+    private readonly HashSet<EntityUid> _refreshConveyors = new();
+
     public override void Initialize()
     {
         _job = new ConveyorJob(this);
@@ -56,6 +66,8 @@ public abstract class SharedConveyorController : VirtualController
 
         SubscribeLocalEvent<ConveyorComponent, StartCollideEvent>(OnConveyorStartCollide);
         SubscribeLocalEvent<ConveyorComponent, ComponentStartup>(OnConveyorStartup);
+
+        _cfg.OnValueChanged(CVars.NetMaxUpdateRange, value => _netMaxUpdateRange = value, true);
 
         base.Initialize();
     }
@@ -131,10 +143,41 @@ public abstract class SharedConveyorController : VirtualController
 
         while (query.MoveNext(out var uid, out var comp, out var fixtures, out var physics, out var xform))
         {
-            _job.Conveyed.Add(((uid, comp, fixtures, physics, xform), Vector2.Zero, false));
+            _job.Conveyed.Add(((uid, comp, fixtures, physics, xform), Vector2.Zero, false, null, 0f));
         }
 
         _parallel.ProcessNow(_job, _job.Conveyed.Count);
+
+        // Reuse the per-tick scratch dictionary instead of allocating a fresh one.
+        _selected.Clear();
+
+        for (var i = 0; i < _job.Conveyed.Count; i++)
+        {
+            var ent = _job.Conveyed[i];
+
+            if (!ent.Result || ent.BestConveyor == null)
+                continue;
+
+            if (!_selected.TryGetValue(ent.BestConveyor.Value, out var existing) || ent.Priority > _job.Conveyed[existing].Priority)
+            {
+                _selected[ent.BestConveyor.Value] = i;
+            }
+        }
+
+        for (var i = 0; i < _job.Conveyed.Count; i++)
+        {
+            var ent = _job.Conveyed[i];
+
+            if (ent.BestConveyor != null && ent.Result && _selected[ent.BestConveyor.Value] != i)
+            {
+                ent.Result = false;
+                _job.Conveyed[i] = ent;
+            }
+        }
+
+        // Reuse the per-tick scratch hashset.
+        _refreshConveyors.Clear();
+        var refreshConveyors = _refreshConveyors;
 
         foreach (var ent in _job.Conveyed)
         {
@@ -142,10 +185,15 @@ public abstract class SharedConveyorController : VirtualController
                 continue;
 
             var physics = ent.Entity.Comp3;
+            var wasConveying = ent.Entity.Comp1.Conveying;
 
             if (physics.BodyStatus != BodyStatus.OnGround)
             {
                 SetConveying(ent.Entity.Owner, ent.Entity.Comp1, false);
+
+                if (wasConveying && ent.BestConveyor != null)
+                    refreshConveyors.Add(ent.BestConveyor.Value);
+
                 continue;
             }
 
@@ -161,9 +209,11 @@ public abstract class SharedConveyorController : VirtualController
                 targetDir += wishDir;
             }
 
+            var isConveying = ent.Result && targetDir.LengthSquared() > 0f;
+
             if (ent.Result)
             {
-                SetConveying(ent.Entity.Owner, ent.Entity.Comp1, targetDir.LengthSquared() > 0f);
+                SetConveying(ent.Entity.Owner, ent.Entity.Comp1, isConveying);
 
                 // We apply friction here so when we push items towards the center of the conveyor they don't go overspeed.
                 // We also don't want this to apply to mobs as they apply their own friction and otherwise
@@ -189,10 +239,21 @@ public abstract class SharedConveyorController : VirtualController
             PhysicsSystem.SetAngularVelocity(ent.Entity.Owner, angularVelocity);
             PhysicsSystem.SetLinearVelocity(ent.Entity.Owner, velocity, wakeBody: false);
 
+            if (wasConveying && !isConveying && ent.BestConveyor != null)
+                refreshConveyors.Add(ent.BestConveyor.Value);
+
             if (!IsConveyed((ent.Entity.Owner, ent.Entity.Comp2)))
             {
+                if (ent.BestConveyor != null)
+                    refreshConveyors.Add(ent.BestConveyor.Value);
+
                 RemComp<ConveyedComponent>(ent.Entity.Owner);
             }
+        }
+
+        foreach (var conveyor in refreshConveyors)
+        {
+            WakeConveyed(conveyor);
         }
     }
 
@@ -211,9 +272,13 @@ public abstract class SharedConveyorController : VirtualController
     /// <returns>False if we should no longer be considered actively conveyed.</returns>
     private bool TryConvey(Entity<ConveyedComponent, FixturesComponent, PhysicsComponent, TransformComponent> entity,
         bool prediction,
-        out Vector2 direction)
+        out Vector2 direction,
+        out EntityUid? bestConveyorUid,
+        out float priority)
     {
         direction = Vector2.Zero;
+        bestConveyorUid = null;
+        priority = 0f;
 
         if (!HasPlayerInRange(entity.Owner))
             return true;
@@ -295,6 +360,9 @@ public abstract class SharedConveyorController : VirtualController
         var itemRelative = conveyorPos - transform.Position;
         direction = Convey(direction, bestSpeed, itemRelative);
 
+        bestConveyorUid = bestConveyor.Owner;
+        priority = Vector2.Dot(transform.Position, conveyorDirection);
+
         // Do a final check for hard contacts so if we're conveying into a wall then NOOP.
         contacts = PhysicsSystem.GetContacts((entity.Owner, fixtures));
 
@@ -327,10 +395,11 @@ public abstract class SharedConveyorController : VirtualController
 
     private bool HasPlayerInRange(EntityUid uid)
     {
-        var range = _cfg.GetCVar(CVars.NetMaxUpdateRange);
+        // _netMaxUpdateRange is the cached CVar value; previously this was looked up via
+        // _cfg.GetCVar per call (called once per conveyed item per tick).
         var coords = Transform(uid).Coordinates;
 
-        foreach (var _ in Lookup.GetEntitiesInRange<ActorComponent>(coords, range))
+        foreach (var _ in Lookup.GetEntitiesInRange<ActorComponent>(coords, _netMaxUpdateRange))
         {
             return true;
         }
@@ -379,7 +448,11 @@ public abstract class SharedConveyorController : VirtualController
     {
         public int BatchSize => 16;
 
-        public List<(Entity<ConveyedComponent, FixturesComponent, PhysicsComponent, TransformComponent> Entity, Vector2 Direction, bool Result)> Conveyed = new();
+        public List<(Entity<ConveyedComponent, FixturesComponent, PhysicsComponent, TransformComponent> Entity,
+            Vector2 Direction,
+            bool Result,
+            EntityUid? BestConveyor,
+            float Priority)> Conveyed = new();
 
         public SharedConveyorController System;
 
@@ -396,9 +469,9 @@ public abstract class SharedConveyorController : VirtualController
 
             var result = System.TryConvey(
                 (convey.Entity.Owner, convey.Entity.Comp1, convey.Entity.Comp2, convey.Entity.Comp3, convey.Entity.Comp4),
-                Prediction, out var direction);
+                Prediction, out var direction, out var bestConveyor, out var priority);
 
-            Conveyed[index] = (convey.Entity, direction, result);
+            Conveyed[index] = (convey.Entity, direction, result, bestConveyor, priority);
         }
     }
 

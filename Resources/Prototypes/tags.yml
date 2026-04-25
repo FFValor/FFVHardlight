@@ -1578,3 +1578,7 @@
 
 - type: Tag
   id: CartridgeShell
+  
+- type: Tag
+  id: BoneArmor
+
