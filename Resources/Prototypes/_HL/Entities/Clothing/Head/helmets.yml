@@ -37,3 +37,84 @@
   - type: PointLight
     radius: 7
     energy: 3
+
+# Mercenary Hardsuit Helmets
+
+- type: entity
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightBase ]
+  id: ClothingHeadHelmetHardsuitMercMedic
+  categories: [ HideSpawnMenu ]
+  name: mercenary medic hardsuit helmet
+  description: A hardsuit helmet designed for mercenary medics, featuring enhanced biological protection and an integrated medical hud.
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Head/Hardsuits/mercenary_medic.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Head/Hardsuits/mercenary_medic.rsi
+  - type: PressureProtection
+    highPressureMultiplier: 0.525
+    lowPressureMultiplier: 1000
+  - type: PointLight
+    radius: 7
+    energy: 3
+
+
+# Science Sealed Helmets
+
+- type: entity
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightBase ]
+  id: ClothingHeadHelmetHardsuitCourser
+  categories: [ HideSpawnMenu ]
+  name: courser exosuit helmet
+  description: A lightweight exosuit helmet designed for science personnel. Features a psionic dampening dome, alongside a narrow spectrum anomaly scanner.
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Head/Hardsuits/courser_exosuit.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Head/Hardsuits/courser_exosuit.rsi
+  - type: PressureProtection
+    highPressureMultiplier: 0.525
+    lowPressureMultiplier: 1000
+  - type: PointLight
+    radius: 7
+    energy: 3
+
+# Medical Sealed Helmets
+
+- type: entity
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightBase ]
+  id: ClothingHeadHelmetHardsuitPractitioner
+  categories: [ HideSpawnMenu ]
+  name: practitioner exosuit helmet
+  description: A lightweight exosuit helmet designed for medical personnel. Features an integrated medical hud, and can display local crew monitoring server information.
+  components:
+  - type: Sprite
+    sprite: _NF/Clothing/Head/Helmets/fsb_eva_helmet.rsi
+  - type: Clothing
+    sprite: _NF/Clothing/Head/Helmets/fsb_eva_helmet.rsi
+  - type: PressureProtection
+    highPressureMultiplier: 0.525
+    lowPressureMultiplier: 1000
+  - type: PointLight
+    radius: 7
+    energy: 3
+
+# Engineering Sealed Helmets
+
+- type: entity
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightBase ]
+  id: ClothingHeadHelmetHardsuitAssessor
+  categories: [ HideSpawnMenu ]
+  name: assessor exosuit helmet
+  description: A lightweight exosuit helmet designed for engineering and disaster response personnel. Features an integrated diagnostic HUD for synthetics.
+  components:
+  - type: Sprite
+    sprite: _NF/Clothing/Head/Helmets/fsc_eva_helmet.rsi
+  - type: Clothing
+    sprite: _NF/Clothing/Head/Helmets/fsc_eva_helmet.rsi
+  - type: PressureProtection
+    highPressureMultiplier: 0.525
+    lowPressureMultiplier: 1000
+  - type: PointLight
+    radius: 7
+    energy: 3

@@ -1,0 +1,49 @@
+# This file is separate from other base clothing files as it's intended for defining and rebalancing broad ability values and function when parented from.
+# I also don't wanna mess with the dick hiding features
+
+# Reactors, For when a piece of outer equipment trades power draw for speed. More speed = More draw -Keep away from combat equipment.
+- type: entity
+  parent: [ClothingOuterVest, PowerCellSlotSmallItem, BaseToggleClothing]
+  id: ClothingOuterReactorLow
+  name: low power reactor
+  description: a low powered reactor core.
+  components:
+  - type: ToggleClothing
+    action: ActionToggleLowReactor
+  - type: ClothingSpeedModifier
+    walkModifier: 1.7 # DeltaV
+    sprintModifier: 1.7 # DeltaV
+  - type: StaticPrice
+    price: 500
+  - type: PowerCellDraw
+    drawRate: 40
+  - type: ToggleCellDraw
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+  - type: Tag
+    tags: []
+- type: entity
+  id: ActionToggleLowReactor
+  name: Toggle Low Powered Reactor
+  description: Toggles the low powered reactor on and off.
+  components:
+  - type: InstantAction
+    itemIconStyle: BigItem
+    event: !type:ToggleActionEvent
+# Chemical Life Support System, makes use of the medibot component with a toggle. Should be able to customize the injected chemicals on the child item. -Keep away from combat equipment.
+
+# Suit Assistant Slot, Allows inserting of certain sized mechanical ghostroles, enables sharing bodily control. -Restricted to outer clothing that feasibly has the ability to move the wearer's body.
+
+# Wearable Anomaly Scanners, toggleable. high and low power versions.
+
+# Wearable Ore Scanners, toggleable. -Restrict to helmets for balancing and logic.
+
+# Wearable Gieger Counter, Atmos Scanner, and T-Ray Scanner
+
+# Wearable Binocular Enhancing, toggleable. -Restricted to head/mask/goggles, for obvious, eye related reasons.
+
+# Inhalant Mask, functionally a reusable easily customizable cigarette. -Restricted to mask slots, to avoid stacking.
+
+# HUD elements, not toggleable. -# Do not stack multiple parents to create omni-HUDs -# Restricted to helmets, for balancing around HUD stacking.
