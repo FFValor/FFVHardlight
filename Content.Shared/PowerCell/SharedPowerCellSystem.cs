@@ -1,8 +1,6 @@
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.PowerCell.Components;
 using Content.Shared.Rejuvenate;
-using Content.Shared.Tag;
-using Content.Shared.Whitelist;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 
@@ -13,8 +11,6 @@ public abstract class SharedPowerCellSystem : EntitySystem
     [Dependency] protected readonly IGameTiming Timing = default!;
     [Dependency] private readonly ItemSlotsSystem _itemSlots = default!;
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
-    [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
-    [Dependency] private readonly TagSystem _tag = default!;
 
     public override void Initialize()
     {
@@ -51,16 +47,6 @@ public abstract class SharedPowerCellSystem : EntitySystem
             return;
 
         if (!HasComp<PowerCellComponent>(args.EntityUid))
-        {
-            args.Cancel();
-            return;
-        }
-
-        // Special-case the NT-88 Peregrine magazine so it cannot be treated as a generic power cell.
-        var magazineRailgunTag = "MagazineRailgunTag";
-        if (_tag.HasTag(args.EntityUid, magazineRailgunTag) &&
-            (!_itemSlots.TryGetSlot(uid, component.CellSlotId, out var itemSlot) ||
-             !_whitelist.IsWhitelistPass(itemSlot.Whitelist, args.EntityUid)))
         {
             args.Cancel();
         }

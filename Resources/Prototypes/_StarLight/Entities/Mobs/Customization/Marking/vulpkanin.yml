@@ -47,7 +47,6 @@
   id: FoxTail
   bodyPart: Tail
   markingCategory: Tail
-  waggingId: FoxTailAnimated
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/vulpkanin.rsi
@@ -70,7 +69,6 @@
   id: WolfTail
   bodyPart: Tail
   markingCategory: Tail
-  waggingId: WolfTailAnimated
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/vulpkanin.rsi
@@ -101,7 +99,6 @@
   id: FoxTailAnimated
   bodyPart: Tail
   markingCategory: Tail
-  staticId: FoxTail
   speciesRestriction: []
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/vulpkanin.rsi
@@ -113,7 +110,6 @@
   id: WolfTailAnimated
   bodyPart: Tail
   markingCategory: Tail
-  staticId: WolfTail
   speciesRestriction: []
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/vulpkanin.rsi
@@ -396,7 +392,6 @@
   id: VulpTail
   bodyPart: Tail
   markingCategory: Tail
-  waggingId: VulpTailAnimated
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
@@ -419,7 +414,6 @@
   id: VulpTailAnimated
   bodyPart: Tail
   markingCategory: Tail
-  staticId: VulpTail
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
@@ -431,7 +425,6 @@
   id: VulpTailTipAnimated
   bodyPart: Tail
   markingCategory: Tail
-  staticId: VulpTailTip
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
@@ -476,7 +469,6 @@
   id: VulpTailFox
   bodyPart: Tail
   markingCategory: Tail
-  waggingId: VulpTailFoxAnimated
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
@@ -499,7 +491,6 @@
   id: VulpTailFoxAnimated
   bodyPart: Tail
   markingCategory: Tail
-  staticId: VulpTailFox
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
@@ -511,7 +502,6 @@
   id: VulpTailFoxTipAnimated
   bodyPart: Tail
   markingCategory: Tail
-  staticId: VulpTailFoxTip
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
@@ -523,7 +513,6 @@
   id: VulpTailBushy
   bodyPart: Tail
   markingCategory: Tail
-  waggingId: VulpTailBushyAnimated
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
@@ -533,7 +522,6 @@
   id: VulpTailBushyAnimated
   bodyPart: Tail
   markingCategory: Tail
-  staticId: VulpTailBushy
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
@@ -543,7 +531,6 @@
   id: VulpTailCoyote
   bodyPart: Tail
   markingCategory: Tail
-  waggingId: VulpTailCoyoteAnimated
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
@@ -553,7 +540,6 @@
   id: VulpTailCoyoteAnimated
   bodyPart: Tail
   markingCategory: Tail
-  staticId: VulpTailCoyote
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi

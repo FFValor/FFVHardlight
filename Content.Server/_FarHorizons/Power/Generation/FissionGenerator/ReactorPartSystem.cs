@@ -203,12 +203,7 @@ public sealed partial class ReactorPartSystem : SharedReactorPartSystem
             if (!gasMix.Immutable) // This prevents it from heating up space itself
                 gasMix.Temperature += DeltaT;
 
-            var burncomp = CompOrNull<DamageOnInteractComponent>(uid);
-            if (burncomp is null)
-            {
-                burncomp = AddComp<DamageOnInteractComponent>(uid);
-                burncomp.Damage = new DamageSpecifier();
-            }
+            var burncomp = EnsureComp<DamageOnInteractComponent>(uid);
 
             burncomp.IsDamageActive = component.Temperature > Atmospherics.T0C + _hotTemp;
 

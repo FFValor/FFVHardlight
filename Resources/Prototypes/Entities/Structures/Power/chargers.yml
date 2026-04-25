@@ -141,7 +141,6 @@
         whitelist:
           tags:
           - PowerCage
-          - MagazineRailgunTag
   - type: Machine
     board: PowerCageRechargerCircuitboard
   - type: StaticPrice

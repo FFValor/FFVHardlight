@@ -36,7 +36,6 @@
     stackRequirements:
       Glass: 10
       Steel: 10
-      Plasteel: 5 # HL: add 5 plasteel
 
 - type: entity
   id: MachineGCSMediumCircuitboard
@@ -52,9 +51,8 @@
       Capacitor: 2
       Manipulator: 2
     stackRequirements:
-      Glass: 20 # HL: 10 -> 20
-      Steel: 20 # HL: 10 -> 20
-      Plasteel: 10 # HL: add 10 plasteel
+      Glass: 10
+      Steel: 10
 
 - type: entity
   id: MachineGCSHighCircuitboard
@@ -70,9 +68,8 @@
       Capacitor: 2
       Manipulator: 2
     stackRequirements:
-      Glass: 30 # HL: 10 -> 30
-      Steel: 30 # HL: 10 -> 30
-      Plasteel: 30 # HL: add 15 plasteel
+      Glass: 10
+      Steel: 10
 
 - type: entity
   id: MachineGCSUltraCircuitboard
@@ -88,10 +85,8 @@
       Capacitor: 2
       Manipulator: 2
     stackRequirements:
-      Glass: 50 # HL: 10 -> 50
-      Steel: 50 # HL: 10 -> 50
-      Plasteel: 30 # HL: add 10 plasteel
-      Bluespace: 10 # HL: add 10 bluespace
+      Glass: 10
+      Steel: 10
 
 - type: entity
   id: MachineGCSStationCircuitboard

@@ -1,5 +1,4 @@
 using Robust.Shared.Serialization;
-using Content.Shared.Atmos;
 
 namespace Content.Shared._NF.PlantAnalyzer;
 
@@ -27,8 +26,6 @@ public sealed class PlantAnalyzerScannedSeedPlantInformation : BoundUserInterfac
     public float SeedPotency;
     public string[]? Speciation; // Currently only available on server, we need to send strings to the client.
     public AdvancedScanInfo? AdvancedInfo;
-    public GasRate[]? ExudeGasRates;
-    public GasRate[]? ConsumeGasRates;
 }
 
 /// <summary>
@@ -85,26 +82,6 @@ public enum AnalyzerHarvestType : byte
     SelfHarvest
 }
 
-public static class GasExtensions
-{
-    public static GasFlags ToFlag(this Gas gas)
-    {
-        return gas switch
-        {
-            Gas.Nitrogen => GasFlags.Nitrogen,
-            Gas.Oxygen => GasFlags.Oxygen,
-            Gas.CarbonDioxide => GasFlags.CarbonDioxide,
-            Gas.Plasma => GasFlags.Plasma,
-            Gas.Tritium => GasFlags.Tritium,
-            Gas.WaterVapor => GasFlags.WaterVapor,
-            Gas.Ammonia => GasFlags.Ammonia,
-            Gas.NitrousOxide => GasFlags.NitrousOxide,
-            Gas.Frezon => GasFlags.Frezon,
-            _ => GasFlags.None,
-        };
-    }
-}
-
 
 [Serializable, NetSerializable]
 public sealed class PlantAnalyzerSetMode : BoundUserInterfaceMessage
@@ -149,23 +126,8 @@ public sealed class PlantAnalyzerUserInterfaceState : BoundUserInterfaceState
     public float SeedPotency;
     public string[]? Speciation; // Currently only available on server, we need to send strings to the client.
     public AdvancedScanInfo? AdvancedInfo;
-    public GasRate[]? ExudeGasRates;
-    public GasRate[]? ConsumeGasRates;
 
     public PlantAnalyzerUserInterfaceState()
     {
-    }
-}
-
-[Serializable, NetSerializable]
-public struct GasRate
-{
-    public Gas Gas;
-    public float Rate;
-
-    public GasRate(Gas gas, float rate)
-    {
-        Gas = gas;
-        Rate = rate;
     }
 }

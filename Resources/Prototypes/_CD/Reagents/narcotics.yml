@@ -515,7 +515,7 @@
             min: 0.1
         damage:
           types:
-            Bloodloss: 2
+            Bloodloss: 4
       - !type:AdjustReagent
         conditions:
         - !type:ReagentThreshold
@@ -530,7 +530,7 @@
             min: 0.1
         damage:
           types:
-            Bloodloss: 2
+            Bloodloss: 4
       - !type:AdjustReagent
         conditions:
         - !type:ReagentThreshold
@@ -545,7 +545,7 @@
             min: 0.1
         damage:
           types:
-            Bloodloss: 3
+            Bloodloss: 8
       - !type:AdjustReagent
         conditions:
         - !type:ReagentThreshold
@@ -560,14 +560,14 @@
             min: 0.1
         damage:
           types:
-            Bloodloss: 4
+            Bloodloss: 10
       - !type:AdjustReagent
         conditions:
         - !type:ReagentThreshold
           reagent: Rust
           min: 1
         reagent: Lexorin
-        amount: 0.6
+        amount: 0.8
       - !type:HealthChange
         conditions:
           - !type:ReagentThreshold
@@ -575,11 +575,11 @@
             min: 0.1
         damage:
           types:
-            Bloodloss: 5
+            Bloodloss: 12
       - !type:AdjustReagent
         conditions:
         - !type:ReagentThreshold
           reagent: Bake
           min: 1
         reagent: Lexorin
-        amount: 0.6
+        amount: 0.8

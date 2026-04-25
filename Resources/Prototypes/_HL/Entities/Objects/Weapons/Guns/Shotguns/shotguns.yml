@@ -63,7 +63,7 @@
     # Pretty much everyone.
     allowedDepartments: [ Civilian, Security, Command, Frontier, CentralCommand ]  #IF we had a merc department we can expand on it
   #- type: ChamberMagazineAmmoProvider
-  #  autoEject: true  
+  #  autoEject: true
 
 - type: entity
   name: Forged Rambler Shotgun
@@ -75,11 +75,10 @@
     sprite: _HL/Objects/Weapons/Guns/Shotguns/forgedrambler.rsi
     scale: 0.7, 0.7
     layers:
-    - state: base
+    - state: mag-0
       map: ["enum.GunVisualLayers.Base"]
-    - state: mag-unshaded-5
-      map: ["enum.GunVisualLayers.MagUnshaded"]
-      shader: unshaded
+    - state: mag-3
+      map: ["enum.GunVisualLayers.Mag"]
   - type: Item
     size: Large
     shape:
@@ -94,17 +93,11 @@
   - type: GunRequiresWield
   - type: Gun
     fireRate: 2
-    selectedMode: SemiAuto
-    availableModes: 
-    - SemiAuto
-    soundGunshot:
-      path: /Audio/Weapons/Guns/Gunshots/shotgun.ogg
-    soundEmpty:
-      path: /Audio/Weapons/Guns/Empty/empty.ogg
   - type: RevolverAmmoProvider
     capacity: 6
     whitelist:
       tags:
+        - Cartridge
         - ShellShotgun12_gauge
     chambers: [ True, True, True, True, True, True ]
     ammoSlots: [ null, null, null, null, null, null ]
@@ -112,6 +105,5 @@
     proto: null
   - type: MagazineVisuals
     magState: mag
-    sprite: _HL/Objects/Weapons/Guns/Shotguns/forgedrambler.rsi
-    steps: 6
+    steps: 4
     zeroVisible: true

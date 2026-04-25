@@ -38,8 +38,6 @@ public sealed partial class ShuttleSystem
                 return XformSystem.ToMapCoordinates(GetCoordinates(beacon.Coordinates));
             case ShuttleExclusionObject exclusion:
                 return XformSystem.ToMapCoordinates(GetCoordinates(exclusion.Coordinates));
-            case ShuttleStationObject station: // HardLight
-                return XformSystem.ToMapCoordinates(GetCoordinates(station.Coordinates));
             case GridMapObject grid:
                 var gridXform = Transform(grid.Entity);
 
@@ -51,7 +49,7 @@ public sealed partial class ShuttleSystem
                 Entity<PhysicsComponent?, TransformComponent?> gridEnt = (grid.Entity, null, gridXform);
                 return new MapCoordinates(Maps.GetGridPosition(gridEnt), gridXform.MapID);
             default:
-                return MapCoordinates.Nullspace; // HardLight
+                throw new ArgumentOutOfRangeException();
         }
     }
 }

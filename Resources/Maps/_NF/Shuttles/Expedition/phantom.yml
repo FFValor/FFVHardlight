@@ -5,7 +5,7 @@ meta:
   forkId: ""
   forkVersion: ""
   time: 10/04/2025 20:52:13
-  entityCount: 847
+  entityCount: 848
 maps: []
 grids:
 - 1
@@ -5105,6 +5105,13 @@ entities:
     components:
     - type: Transform
       pos: -3.5,-6.5
+      parent: 1
+- proto: SpawnPointLatejoin
+  entities:
+  - uid: 682
+    components:
+    - type: Transform
+      pos: -0.5,-8.5
       parent: 1
 - proto: SprayBottleSpaceCleaner
   entities:

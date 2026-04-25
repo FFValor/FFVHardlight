@@ -17,6 +17,5 @@
   - MachineGCSLowCircuitboard
   - MachineGCSMediumCircuitboard
   - MachineGCSHighCircuitboard
-  - MachineGCSUltraCircuitboard # HL
   - AdvancedRadarConsoleCircuitboard
   # - ComputerIFFCircuitboard
