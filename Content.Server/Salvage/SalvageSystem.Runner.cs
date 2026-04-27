@@ -78,6 +78,7 @@ public sealed partial class SalvageSystem
     /// </summary>
     private void Announce(EntityUid mapUid, string text)
     {
+<<<<<<< HEAD
         // HardLight: announcements race with map teardown at expedition end (FTL-out clears
         // the map while pending Announce calls are still in flight). Both "map component
         // gone" and "MapId no longer registered" are normal during cleanup, so log at Debug.
@@ -94,6 +95,10 @@ public sealed partial class SalvageSystem
             Log.Debug($"Skipping salvage announcement for {ToPrettyString(mapUid)} because map {mapId} is no longer registered.");
             return;
         }
+=======
+        var mapId = Comp<MapComponent>(mapUid).MapId;
+        var sender = _mapSystem.GetMap(mapId); // HardLight
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
 
         // I love TComms and chat!!!
         _chat.ChatMessageToManyFiltered(
@@ -101,7 +106,11 @@ public sealed partial class SalvageSystem
             ChatChannel.Radio,
             text,
             text,
+<<<<<<< HEAD
             sender.Value, // HardLight: _mapManager.GetMapEntityId(mapId)<sender
+=======
+            sender, // HardLight: _mapManager.GetMapEntityId(mapId)<sender
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
             false,
             true,
             null);
@@ -202,10 +211,14 @@ public sealed partial class SalvageSystem
         if (ev.FromMapUid is not { } expeditionMapUid || !TryComp<SalvageExpeditionComponent>(expeditionMapUid, out var expedition))
             return;
 
+<<<<<<< HEAD
         // HardLight: only the wall SalvageExpeditionConsole flow keeps station-side
         // expedition data that needs CanFinish flipped. Disk-spawned expeditions store
         // a ShuttleConsoleComponent uid here and have no SalvageExpeditionDataComponent
         // to update, so the TryComp guard correctly no-ops them.
+=======
+        // HardLight: Update the station's expedition data via the console
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
         if (expedition.Console != null && TryComp<SalvageExpeditionConsoleComponent>(expedition.Console.Value, out var consoleComp))
         {
             var data = GetStationExpeditionData(expedition.Console.Value);
@@ -227,8 +240,13 @@ public sealed partial class SalvageSystem
         if (Exists(expeditionMapUid))
         {
             // HardLight: Clean up console state before deleting expedition
+<<<<<<< HEAD
             CleanupExpeditionConsoleState(expeditionMapUid);
             QueueDel(expeditionMapUid);
+=======
+            CleanupExpeditionConsoleState(ev.FromMapUid.Value);
+            QueueDel(ev.FromMapUid.Value);
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
         }
     }
 
@@ -384,6 +402,7 @@ public sealed partial class SalvageSystem
         // End Frontier: mission-specific logic
     }
 
+<<<<<<< HEAD
     // HardLight: Clean up console state when expedition ends.
     //
     // There are two ways an expedition can be started, and they store different things
@@ -400,6 +419,9 @@ public sealed partial class SalvageSystem
     // The genuinely-bad cases are: `Console` is null (someone forgot to set it on a
     // new spawn path), or `Console` points to an entity that is neither type (we are
     // looking at the wrong entity). Both still log Warning so they get noticed.
+=======
+    // HardLight: Clean up console state when expedition ends
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
     private void CleanupExpeditionConsoleState(EntityUid expeditionUid)
     {
         if (!TryComp<SalvageExpeditionComponent>(expeditionUid, out var component))
@@ -407,6 +429,7 @@ public sealed partial class SalvageSystem
 
         if (component.Console == null)
         {
+<<<<<<< HEAD
             // Player can sell the ship / round can restart while the expedition is still
             // running, in which case the console reference legitimately gets cleared.
             Log.Debug($"Skipping console cleanup for expedition {expeditionUid} - no originating console recorded.");
@@ -431,6 +454,149 @@ public sealed partial class SalvageSystem
         var data = GetStationExpeditionData(consoleUid);
         if (data == null)
             return;
+=======
+            var data = GetStationExpeditionData(component.Console.Value);
+            if (data != null)
+            {
+                Log.Info($"Cleaning up expedition state for console {ToPrettyString(component.Console.Value)}");
+
+                // Reset station expedition state immediately
+                data.ActiveMission = 0;
+                data.CanFinish = false;
+                data.Cooldown = false;
+                // HardLight: Clear missions immediately to prevent UI confusion
+                data.Missions.Clear();
+
+                // Update console to show cleared state
+                UpdateConsole((component.Console.Value, consoleComp));
+
+                // HardLight: Generate new missions after a shorter delay to reduce confusion
+                var consoleUid = component.Console.Value;
+                RobustTimer.Spawn(TimeSpan.FromSeconds(0.5), () => // consoleUid.SpawnTimer<RobustTimer.Spawn
+                {
+                    if (Exists(consoleUid) && TryComp<SalvageExpeditionConsoleComponent>(consoleUid, out var comp))
+                    {
+                        var stationData = GetStationExpeditionData(consoleUid);
+                        if (stationData != null && !stationData.GeneratingMissions)
+                        {
+                            GenerateMissions(stationData);
+                            UpdateConsole((consoleUid, comp));
+                            Log.Info($"Console {ToPrettyString(consoleUid)} missions regenerated after expedition cleanup");
+                        }
+                    }
+                });
+
+                Log.Info($"Console {ToPrettyString(component.Console.Value)} state reset successfully");
+            }
+        }
+        else
+        {
+            Log.Warning($"Failed to cleanup console state for expedition {expeditionUid} - console reference missing or invalid");
+        }
+    }
+
+    /// <summary>
+    /// HardLight: Resolve a return destination map for expedition egress.
+    /// Prefers the round's DefaultMap, then falls back to ColComm.
+    /// </summary>
+    private bool TryGetExpeditionReturnMap(out EntityUid targetMapUid, out string targetSource)
+    {
+        targetMapUid = EntityUid.Invalid;
+        targetSource = string.Empty;
+
+        var defaultMapId = _gameTicker.DefaultMap;
+        if (_mapSystem.TryGetMap(defaultMapId, out var defaultMapUid) && defaultMapUid != null && defaultMapUid != EntityUid.Invalid)
+        {
+            targetMapUid = (EntityUid) defaultMapUid;
+            targetSource = "DefaultMap";
+            return true;
+        }
+
+        var colcommQuery = AllEntityQuery<StationColcommComponent>();
+        if (!colcommQuery.MoveNext(out var colcommComp))
+            return false;
+
+        if (colcommComp.MapEntity != null && Exists(colcommComp.MapEntity.Value))
+        {
+            targetMapUid = colcommComp.MapEntity.Value;
+            targetSource = "ColComm.MapEntity";
+            return true;
+        }
+
+        if (colcommComp.Entity != null && Exists(colcommComp.Entity.Value))
+        {
+            var colcommXform = Transform(colcommComp.Entity.Value);
+            if (colcommXform.MapUid != null && Exists(colcommXform.MapUid.Value))
+            {
+                targetMapUid = colcommXform.MapUid.Value;
+                targetSource = "ColComm.GridMap";
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private List<Vector2> GetExistingGridPositions(MapId mapId) // HardLight
+    {
+        var positions = new List<Vector2>();
+        var gridQuery = EntityManager.AllEntityQueryEnumerator<MapGridComponent, TransformComponent>();
+
+        while (gridQuery.MoveNext(out var _, out var _, out var xform))
+        {
+            if (xform.MapID == mapId)
+                positions.Add(_transform.GetWorldPosition(xform));
+        }
+
+        return positions;
+    }
+
+    private Vector2 PickExpeditionReturnDropLocation(List<Vector2> existingPositions) // HardLight
+    {
+        var minDistanceSquared = ExpeditionReturnMinDistance * ExpeditionReturnMinDistance;
+        var dropLocation = _random.NextVector2(ExpeditionReturnMinRange, ExpeditionReturnMaxRange);
+
+        for (var i = 0; i < ExpeditionReturnPositionRetries; i++)
+        {
+            var valid = true;
+
+            foreach (var pos in existingPositions)
+            {
+                if ((pos - dropLocation).LengthSquared() < minDistanceSquared)
+                {
+                    valid = false;
+                    break;
+                }
+            }
+
+            if (valid)
+                break;
+
+            dropLocation = _random.NextVector2(ExpeditionReturnMinRange, ExpeditionReturnMaxRange);
+        }
+
+        // Reserve this location so subsequent shuttles in the same batch spread out.
+        existingPositions.Add(dropLocation);
+        return dropLocation;
+    }
+
+    /// <summary>
+    /// HardLight: FTL all shuttles currently on an expedition map back to the home map.
+    /// </summary>
+    /// <param name="expeditionMapUid">Map entity containing the expedition.</param>
+    /// <param name="hyperspaceTime">Optional travel time override.</param>
+    private void FTLAllShuttlesHome(EntityUid expeditionMapUid, float? hyperspaceTime = null)
+    {
+        var shuttleQuery = AllEntityQuery<ShuttleComponent, TransformComponent>();
+        if (!TryGetExpeditionReturnMap(out var returnMapUid, out var targetSource))
+        {
+            Log.Error($"No valid return map found (DefaultMap or ColComm) for expedition FTL egress from {expeditionMapUid}.");
+            return;
+        }
+
+        var targetMapId = Comp<MapComponent>(returnMapUid).MapId;
+        var existingPositions = GetExistingGridPositions(targetMapId);
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
 
         Log.Info($"Cleaning up expedition state for console {ToPrettyString(consoleUid)}");
 
@@ -602,7 +768,17 @@ public sealed partial class SalvageSystem
         {
             if (attempt >= 24)
             {
+<<<<<<< HEAD
                 Log.Warning($"Expedition {expeditionMapUid} still has expedition participant shuttles after cleanup retries; skipping forced map deletion to avoid deleting active players.");
+=======
+                if (attempt >= 24)
+                {
+                    Log.Warning($"Expedition {expeditionMapUid} still has shuttles after cleanup retries; skipping forced map deletion to avoid deleting active players.");
+                    return;
+                }
+
+                RobustTimer.Spawn(TimeSpan.FromSeconds(5), () => QueueExpeditionDeletionWhenEmpty(expeditionMapUid, attempt + 1));
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
                 return;
             }
 

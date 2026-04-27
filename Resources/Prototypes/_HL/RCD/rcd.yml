@@ -65,6 +65,7 @@
   rules:
     - CanBuildOnEmptyTile
   fx: EffectRCDConstruct1
+<<<<<<< HEAD
 
 - type: rcd
   id: WindowDirectionalShuttle
@@ -449,3 +450,5 @@
   rules:
     - CanBuildOnEmptyTile
   fx: EffectRCDConstruct1
+=======
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")

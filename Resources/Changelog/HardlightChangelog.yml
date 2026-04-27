@@ -2446,6 +2446,7 @@ Entries:
       message: Peregrine mags being general use batteries
   id: 269
   time: '2026-04-09T21:27:02.0000000+00:00'
+<<<<<<< HEAD
 - author: Illumos
   changes:
     - type: Add
@@ -3308,3 +3309,5 @@ Entries:
         tick.
   id: 355
   time: '2026-04-26T21:43:56.0000000+00:00'
+=======
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")

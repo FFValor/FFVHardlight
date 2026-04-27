@@ -457,6 +457,7 @@
     - PlatingNW
     - PlatingSE
     - PlatingSW
+<<<<<<< HEAD
     - PlatingHalfV
     - PlatingHalfH
     - PlatingWedgeN
@@ -484,6 +485,8 @@
     - WallShuttleDiagonal
     - WallReinforcedDiagonal
     - WallSolidDiagonal
+=======
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
   - type: LimitedCharges
     maxCharges: 30
   - type: Sprite

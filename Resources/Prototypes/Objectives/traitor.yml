@@ -169,8 +169,13 @@
     - !type:TargetObjectiveMindFilter
       blacklist:
         components:
+<<<<<<< HEAD
         - KeepAliveCondition
         - HelpProgressCondition
+=======
+        - RandomTraitorAlive
+        - RandomTraitorProgress
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
   - type: ObjectiveReward
     # Reward for them surviving the round
     amount: 15000
@@ -203,8 +208,13 @@
     - !type:TargetObjectiveMindFilter
       blacklist:
         components:
+<<<<<<< HEAD
         - KeepAliveCondition
         - HelpProgressCondition
+=======
+        - RandomTraitorAlive
+        - RandomTraitorProgress
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
   - type: ObjectiveReward
     # Reward for them succeeding in their objective
     amount: 10000

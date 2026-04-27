@@ -2,7 +2,10 @@
 using Content.Server.Actions;
 using Content.Server.Humanoid;
 using Content.Shared._CS.Humanoid;
+<<<<<<< HEAD
 using Content.Shared._Shitmed.Humanoid.Events; // Hardlight
+=======
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
 using Content.Shared.Mobs;
@@ -27,7 +30,10 @@ public sealed class WaggingSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<WaggingComponent, ComponentInit>(OnWaggingMapInit); // Coyote: Move to Component Init
+<<<<<<< HEAD
         SubscribeLocalEvent<WaggingComponent, ProfileLoadFinishedEvent>(OnProfileLoadFinished); // Hardlight
+=======
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
         SubscribeLocalEvent<WaggingComponent, ComponentShutdown>(OnWaggingShutdown);
         SubscribeLocalEvent<WaggingComponent, ToggleActionEvent>(OnWaggingToggle);
         SubscribeLocalEvent<WaggingComponent, MobStateChangedEvent>(OnMobStateChanged);
@@ -35,6 +41,7 @@ public sealed class WaggingSystem : EntitySystem
 
     private void OnWaggingMapInit(EntityUid uid, WaggingComponent component, ComponentInit args) // Coyote: Move to Component Init
     {
+<<<<<<< HEAD
         // Hardlight start
         EnsureWaggingAction(uid, component);
     }
@@ -47,6 +54,9 @@ public sealed class WaggingSystem : EntitySystem
     private void EnsureWaggingAction(EntityUid uid, WaggingComponent component)
     {
         // Hardlight end
+=======
+
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
         if (!TryComp<HumanoidAppearanceComponent>(uid, out var humanoid))
             return;
 
@@ -95,6 +105,7 @@ public sealed class WaggingSystem : EntitySystem
             string? target;
             if (wagging.Wagging)
             {
+<<<<<<< HEAD
                 // Hardlight start
                 _coyoteMarking.TryGetWaggingId(markings[idx].MarkingId, out target);
             }
@@ -102,6 +113,13 @@ public sealed class WaggingSystem : EntitySystem
             {
                 // Hardlight end
                 _coyoteMarking.TryGetStaticId(markings[idx].MarkingId, out target);
+=======
+                _coyoteMarking.TryGetStaticId(markings[idx].MarkingId, out target);
+            }
+            else
+            {
+                _coyoteMarking.TryGetWaggingId(markings[idx].MarkingId, out target);
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
             }
 
             if (target == null)

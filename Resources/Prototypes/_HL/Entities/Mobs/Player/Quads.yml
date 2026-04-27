@@ -211,7 +211,11 @@
     stateOn: engieservborgballz
     movementStateOff: engieservborg_moving
     movementStateOn: engieservborg_movingballz
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
 - type: entity
   id: Orchidborg
   parent: BorgChassisQuad
@@ -366,12 +370,16 @@
         - PositronicBrain
       borg_module:
         - BorgModuleTool
+<<<<<<< HEAD
   - type: ItemSlots
     slots:
       cell_slot:
         name: power-cell-slot-component-slot-name-default
         startingItem: PowerCellAntiqueProto
 
+=======
+        
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
 - type: entity
   id: PlayerBorgQuadorchid
   parent: Orchidborg
@@ -384,11 +392,14 @@
         - PositronicBrain
       borg_module:
         - BorgModuleTool
+<<<<<<< HEAD
   - type: ItemSlots
     slots:
       cell_slot:
         name: power-cell-slot-component-slot-name-default
         startingItem: PowerCellMedium
+=======
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
 
 - type: entity
   id: PlayerBorgQuadengiserv
@@ -402,11 +413,14 @@
         - PositronicBrain
       borg_module:
         - BorgModuleTool
+<<<<<<< HEAD
   - type: ItemSlots
     slots:
       cell_slot:
         name: power-cell-slot-component-slot-name-default
         startingItem: PowerCellMedium
+=======
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
 
 - type: entity
   id: PlayerBorgQuadfeathered

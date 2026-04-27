@@ -17,7 +17,11 @@
       checkUser: true
     - !type:EntityWhitelistRequirement
       whitelist:
+<<<<<<< HEAD
         components: [MobState, Food] # Don't go around biting inanimate objects.
+=======
+        components: [MobState, Edible] # Don't go around biting inanimate objects.
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
   action:
     !type:ComplexAction
     actions:

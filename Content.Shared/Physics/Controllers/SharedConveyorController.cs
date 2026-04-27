@@ -148,8 +148,12 @@ public abstract class SharedConveyorController : VirtualController
 
         _parallel.ProcessNow(_job, _job.Conveyed.Count);
 
+<<<<<<< HEAD
         // Reuse the per-tick scratch dictionary instead of allocating a fresh one.
         _selected.Clear();
+=======
+        var selected = new Dictionary<EntityUid, int>();
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
 
         for (var i = 0; i < _job.Conveyed.Count; i++)
         {
@@ -158,9 +162,15 @@ public abstract class SharedConveyorController : VirtualController
             if (!ent.Result || ent.BestConveyor == null)
                 continue;
 
+<<<<<<< HEAD
             if (!_selected.TryGetValue(ent.BestConveyor.Value, out var existing) || ent.Priority > _job.Conveyed[existing].Priority)
             {
                 _selected[ent.BestConveyor.Value] = i;
+=======
+            if (!selected.TryGetValue(ent.BestConveyor.Value, out var existing) || ent.Priority > _job.Conveyed[existing].Priority)
+            {
+                selected[ent.BestConveyor.Value] = i;
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
             }
         }
 
@@ -168,17 +178,24 @@ public abstract class SharedConveyorController : VirtualController
         {
             var ent = _job.Conveyed[i];
 
+<<<<<<< HEAD
             if (ent.BestConveyor != null && ent.Result && _selected[ent.BestConveyor.Value] != i)
+=======
+            if (ent.BestConveyor != null && ent.Result && selected[ent.BestConveyor.Value] != i)
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
             {
                 ent.Result = false;
                 _job.Conveyed[i] = ent;
             }
         }
 
+<<<<<<< HEAD
         // Reuse the per-tick scratch hashset.
         _refreshConveyors.Clear();
         var refreshConveyors = _refreshConveyors;
 
+=======
+>>>>>>> parent of 8091b238a2 (Revert "Merge branch 'FFVEquipmentRework' of https://github.com/FFValor/FFVHardlight into FFVEquipmentRework")
         foreach (var ent in _job.Conveyed)
         {
             if (!ent.Entity.Comp3.Predict && prediction)
