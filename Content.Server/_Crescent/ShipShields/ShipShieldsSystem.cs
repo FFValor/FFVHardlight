@@ -247,6 +247,7 @@ public sealed partial class ShipShieldsSystem : EntitySystem
             collisionLayer: (int)CollisionGroup.BulletImpassable, // Mono - Only try to block bullets
             body: shieldPhysics);
 
+        _physicsSystem.SetCanCollide(shield, true, body: shieldPhysics);
         _physicsSystem.WakeBody(shield, body: shieldPhysics);
         _physicsSystem.SetSleepingAllowed(shield, shieldPhysics, false);
 
@@ -273,8 +274,20 @@ public sealed partial class ShipShieldsSystem : EntitySystem
     // HardLight start
     private bool HasEmitterShield(EntityUid emitterUid, EntityUid gridUid, ShipShieldEmitterComponent emitter)
     {
-        if (emitter.Shield != null && Exists(emitter.Shield.Value))
-            return true;
+        if (emitter.Shield is { } shieldUid && Exists(shieldUid))
+        {
+            if (TryComp<ShipShieldComponent>(shieldUid, out var shield)
+                && shield.Source == emitterUid
+                && shield.Shielded == gridUid)
+            {
+                emitter.Shielded = gridUid;
+                return true;
+            }
+
+            // Stale or mismatched shield reference; allow recreation.
+            emitter.Shield = null;
+            emitter.Shielded = null;
+        }
 
         if (TryComp<ShipShieldedComponent>(gridUid, out var shielded)
             && shielded.Source == emitterUid

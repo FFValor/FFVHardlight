@@ -3186,3 +3186,125 @@ Entries:
       message: Added snack vending machines back to the expedition spawn pool!
   id: 343
   time: '2026-04-25T05:29:25.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Tweak
+      message: Gateway sound to be a bit easier on the ears
+    - type: Tweak
+      message: Allowed synths to take the vampiric trait
+    - type: Tweak
+      message: removed unusable cybernetics from research/crafting
+    - type: Fix
+      message: fixed injector deny popup localization not working
+  id: 344
+  time: '2026-04-25T21:13:56.0000000+00:00'
+- author: VoidedDevNull
+  changes:
+    - type: Add
+      message: New Starlight Tiles Ported
+  id: 345
+  time: '2026-04-25T21:15:17.0000000+00:00'
+- author: Kronyxxx
+  changes:
+    - type: Fix
+      message: >-
+        Fixed `MothershipCore` spamming stack traces (and tanking server
+        tickrate) when tools were used on it.
+    - type: Fix
+      message: >-
+        Fixed solution containers spamming stack traces every tick after
+        FTL/shipyard moves, a major source of recent server lag.
+  id: 346
+  time: '2026-04-25T21:16:48.0000000+00:00'
+- author: Kronyxxx
+  changes:
+    - type: Add
+      message: >-
+        Xenoborg byte drone ships now patrol deep space, only attack ships that
+        get within ~1.2 km, and chase ships that shoot them or get within 500 m.
+        Aggro fades after 30 s of no contact.
+    - type: Tweak
+      message: Xenoborg byte drone ships no longer spawn within 5 km of the trade hub.
+    - type: Tweak
+      message: >-
+        AI ship-mounted turrets no longer fight the AI core for steering;
+        mounted turrets only fire, the core does the flying.
+  id: 347
+  time: '2026-04-25T22:05:54.0000000+00:00'
+- author: GravastarDragon
+  changes:
+    - type: Add
+      message: >-
+        Added four new borg chassis options. one in sec, service, engineering,
+        and salvage.
+  id: 348
+  time: '2026-04-25T22:17:40.0000000+00:00'
+- author: Kronyxxx
+  changes:
+    - type: Fix
+      message: >-
+        Fixed ship gun projectiles colliding with the firing ship and appearing
+        to hit the center of the ship.
+  id: 349
+  time: '2026-04-25T22:39:32.0000000+00:00'
+- author: Kronyxxx
+  changes:
+    - type: Tweak
+      message: >-
+        Byte drones now only fully commit inside 500m, soft-chase out to 1000m,
+        and disengage after 10 seconds past 1000m.
+    - type: Tweak
+      message: >-
+        Gunnery console radar can now scroll out to 1500m for better situational
+        awareness.
+  id: 350
+  time: '2026-04-25T22:39:44.0000000+00:00'
+- author: Kronyx
+  changes:
+    - type: Fix
+      message: >-
+        Ship projectiles now inherit firing platform velocity, fixing
+        moving-ship shot origin/range weirdness.
+    - type: Fix
+      message: >-
+        Gunnery radar now keeps projectile/hitscan feedback visible at expected
+        engagement distances.
+    - type: Tweak
+      message: Ship-class hitscan laser range set to 500m.
+    - type: Tweak
+      message: >-
+        Byte AI now scales by rank (small/medium/large) for speed, aim quality,
+        disengage behavior, and spawn distance.
+  id: 351
+  time: '2026-04-26T21:39:37.0000000+00:00'
+- author: Kronyxxx
+  changes:
+    - type: Fix
+      message: >-
+        Secbug, Djbug, Engineerbug, and Minerbug borg chassis now display their
+        correct sprites instead of flashing error signs.
+  id: 352
+  time: '2026-04-26T21:39:51.0000000+00:00'
+- author: Kronyxxx
+  changes:
+    - type: Fix
+      message: >-
+        Fixed flatpacks incorrectly saying "No room to unpack!" on valid station
+        tiles.
+  id: 353
+  time: '2026-04-26T21:40:39.0000000+00:00'
+- author: R3v3l4t1on
+  changes:
+    - type: Fix
+      message: Fixed all xenoborgs apart from the quad looking like engis
+  id: 354
+  time: '2026-04-26T21:42:08.0000000+00:00'
+- author: Kronyxxx
+  changes:
+    - type: Fix
+      message: >-
+        Prevented Station AI vision from occasionally throwing concurrent
+        collection exceptions when multiple LOS/range checks run in the same
+        tick.
+  id: 355
+  time: '2026-04-26T21:43:56.0000000+00:00'

@@ -545,7 +545,14 @@ public abstract partial class SharedGunSystem : EntitySystem
         var physics = _physQuery.CompOrNull(uid) ?? EnsureComp<PhysicsComponent>(uid);
         Physics.SetBodyStatus(uid, physics, BodyStatus.InAir);
 
-        var targetVelocity = direction.Normalized() * speed; // HardLight: Removed -gunVelocity; keeps projectile trajectory independent from moving platform velocity.
+        // HardLight: inherit the firing platform's map-frame velocity so projectiles
+        // travel at `speed` *relative to the shooter*, not relative to the world.
+        // Without this, a ship moving at near-projectile speed sees its own shells
+        // fall back to mid-grid (looking like they spawned at the ship's center)
+        // and lose almost all forward range. Adding `gunVelocity` (the shooter's
+        // map-linear velocity, supplied by the caller) restores Galilean-correct
+        // ballistics for both ship guns and handheld weapons fired while moving.
+        var targetVelocity = gunVelocity + direction.Normalized() * speed;
         Physics.SetLinearVelocity(uid, targetVelocity, body: physics);
         // Mono
         if (offset != 0f)
