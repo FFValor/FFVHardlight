@@ -56,6 +56,14 @@ public sealed class MedibotSystem : EntitySystem
 
     private void OnInteract(Entity<MedibotComponent> medibot, ref UserActivateInWorldEvent args)
     {
+        // NEW: Check if this is self-activation (wearer activating their own clothing)
+        if (args.User == args.Target && medibot.Comp.AllowSelfUse)
+        {
+            TryInjectSelf(medibot, args.User);
+            return;
+        }
+
+        // Existing NPC behavior: inject other entity
         if (!CheckInjectable(medibot!, args.Target, true)) return;
 
         _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, args.User, 2f, new MedibotInjectDoAfterEvent(), args.User, args.Target)
@@ -141,6 +149,34 @@ public sealed class MedibotSystem : EntitySystem
         _audio.PlayPredicted(medibot.Comp.InjectSound, medibot, medibot);
 
         return true;
+    }
+
+    // NEW: Simple self-injection without DoAfter delay
+    private void TryInjectSelf(Entity<MedibotComponent> medibot, EntityUid user)
+    {
+        if (!TryComp<MobStateComponent>(user, out var mobState)) return;
+        if (!TryComp<DamageableComponent>(user, out var damageable)) return;
+        if (!_solutionContainer.TryGetInjectableSolution(user, out var injectable, out _)) return;
+
+        var total = damageable.TotalDamage;
+
+        // Find valid treatment for current state
+        if (!TryGetTreatment(medibot.Comp, mobState.CurrentState, out var treatment))
+        {
+            _popup.PopupClient(Loc.GetString("medibot-no-treatment-available"), medibot, user);
+            return;
+        }
+
+        if (!treatment.IsValid(total))
+        {
+            _popup.PopupClient(Loc.GetString("medibot-target-healthy"), medibot, user);
+            return;
+        }
+
+        // Apply injection
+        _solutionContainer.TryAddReagent(injectable.Value, treatment.Reagent, treatment.Quantity, out _);
+        _popup.PopupClient(Loc.GetString("medibot-self-injected"), medibot, user);
+        _audio.PlayPredicted(medibot.Comp.InjectSound, medibot, user);
     }
 }
 

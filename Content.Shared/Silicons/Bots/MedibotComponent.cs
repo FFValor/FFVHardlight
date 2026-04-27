@@ -25,6 +25,13 @@ public sealed partial class MedibotComponent : Component
     /// </summary>
     [DataField("injectSound")]
     public SoundSpecifier InjectSound = new SoundPathSpecifier("/Audio/Items/hypospray.ogg");
+
+    /// <summary>
+    /// If true, allows the wearer/user to activate for self-treatment.
+    /// When false (default), only works on other entities (NPC medibot behavior).
+    /// </summary>
+    [DataField]
+    public bool AllowSelfUse = false;
 }
 
 /// <summary>
