@@ -1,4 +1,5 @@
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Clothing.EntitySystems;
 using Content.Shared.Damage;
 using Content.Shared.DoAfter;
 using Content.Shared.Emag.Components;
@@ -32,6 +33,7 @@ public sealed class MedibotSystem : EntitySystem
 
         SubscribeLocalEvent<EmaggableMedibotComponent, GotEmaggedEvent>(OnEmagged);
         SubscribeLocalEvent<MedibotComponent, UserActivateInWorldEvent>(OnInteract);
+        SubscribeLocalEvent<MedibotComponent, ToggleClothingEvent>(OnToggleClothing);
         SubscribeLocalEvent<MedibotComponent, MedibotInjectDoAfterEvent>(OnInject);
     }
 
@@ -56,14 +58,11 @@ public sealed class MedibotSystem : EntitySystem
 
     private void OnInteract(Entity<MedibotComponent> medibot, ref UserActivateInWorldEvent args)
     {
-        // NEW: Check if this is self-activation (wearer activating their own clothing)
-        if (args.User == args.Target && medibot.Comp.AllowSelfUse)
-        {
-            TryInjectSelf(medibot, args.User);
+        // Check if being worn - if so, let ToggleClothing handle it
+        if (IsWorn(medibot))
             return;
-        }
 
-        // Existing NPC behavior: inject other entity
+        // Not worn - existing NPC behavior: inject other entity
         if (!CheckInjectable(medibot!, args.Target, true)) return;
 
         _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, args.User, 2f, new MedibotInjectDoAfterEvent(), args.User, args.Target)
@@ -71,6 +70,22 @@ public sealed class MedibotSystem : EntitySystem
             BlockDuplicate = true,
             BreakOnMove = true,
         });
+    }
+
+    private void OnToggleClothing(Entity<MedibotComponent> medibot, ref ToggleClothingEvent args)
+    {
+        var wearer = args.Performer;
+        if (wearer == EntityUid.Invalid)
+            return;
+
+        TryInjectSelf(medibot, wearer);
+    }
+    private bool IsWorn(Entity<MedibotComponent> medibot)
+    {
+        if (!TryComp<TransformComponent>(medibot, out var transform))
+            return false;
+
+        return transform.ParentUid != EntityUid.Invalid;
     }
 
     private void OnInject(EntityUid uid, MedibotComponent comp, ref MedibotInjectDoAfterEvent args)

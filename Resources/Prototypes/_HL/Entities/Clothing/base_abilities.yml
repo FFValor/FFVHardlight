@@ -32,23 +32,33 @@
   - type: InstantAction
     itemIconStyle: BigItem
     event: !type:ToggleActionEvent
+
 # Chemical Life Support System, makes use of the medibot component with a toggle. Should be able to customize the injected chemicals on the child item. -Keep away from combat equipment.
-- type: Clothing
-  id: MedibotPatch
+- type: entity
+  id: ClothingOuterLifeSupport
+  name: life support vest
+  description: A medical device that can autonomously inject chemicals when active.
+  parent: [ClothingOuterVest, BaseToggleClothing]
   components:
-  - type: Clothing
-    slots: [inner]
-    quickEquip: false
+  - type: ToggleClothing
+    action: ActionToggleLifeSupportSystem
   - type: Medibot
-    allowSelfUse: true  # <-- enables self-activation
     treatments:
       Alive:
         reagent: Tricordrazine
-        quantity: 5
-        minDamage: 10
+        quantity: 10
+        minDamage: 1
       Critical:
         reagent: Tricordrazine
-        quantity: 10
+        quantity: 100
+- type: entity
+  id: ActionToggleLifeSupportSystem
+  name: Toggle Life Support System
+  description: Toggles chemical life support on and off.
+  components:
+  - type: InstantAction
+    itemIconStyle: BigItem
+    event: !type:ToggleActionEvent
 # Suit Assistant Slot, Allows inserting of certain sized mechanical ghostroles, enables sharing bodily control. -Restricted to outer clothing that feasibly has the ability to move the wearer's body.
 
 # Wearable Anomaly Scanners, toggleable. high and low power versions.
