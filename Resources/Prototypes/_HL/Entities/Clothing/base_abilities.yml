@@ -1,38 +1,38 @@
-# This file is separate from other base clothing files as it's intended for defining and rebalancing broad ability values and function when parented from.
-# I also don't wanna mess with the dick hiding features
+# This file is separate from other base clothing files as it's more intended for examples of how to use and balance certain abilities, rather than as a global base. Also to enforce my evil agenda through comments (IE, balancing concerns)
+# I'll try to keep all examples explained, and still usable for prototyping, but some may be more for demonstration purposes, and not intended to be used as is. I'll try to mark those clearly.
 
-# Reactors, For when a piece of outer equipment trades power draw for speed. More speed = More draw -Keep away from combat equipment.
+# Reactors. The replacement for speed boots, intended (and encouraged to use for) niche outer equipment slot items -Keep away from combat equipment.
 - type: entity
   parent: [ClothingOuterVest, PowerCellSlotSmallItem, BaseToggleClothing]
-  id: ClothingOuterReactorLow
-  name: low power reactor
-  description: a low powered reactor core.
+  id: ClothingOuterReactorBase
+  name: speed reactor
+  description: How are you seeing this?
   components:
   - type: ToggleClothing
-    action: ActionToggleLowReactor
-  - type: ClothingSpeedModifier
-    walkModifier: 1.7 # DeltaV
-    sprintModifier: 1.7 # DeltaV
-  - type: StaticPrice
-    price: 500
+    action: ActionToggleAbility
+  - type: ToggleableClothingSpeedModifier # New component!, treat it as where you define whatever your gear's normal, inactive slowdown will be.
+    activatedWalkModifier: 1.25 # These two are where you define the active speed boost, balance power draw accordingly.
+    activatedSprintModifier: 1.25
+    deactivatedWalkModifier: 0.95 # These two functionally replace the basic speed modifier component.
+    deactivatedSprintModifier: 0.95
   - type: PowerCellDraw
-    drawRate: 40
+    drawRate: 40 # The funny number you'll wanna play with a ton when balancing the speed boost.
   - type: ToggleCellDraw
   - type: ItemSlots
     slots:
       cell_slot:
         name: power-cell-slot-component-slot-name-default
-  - type: Tag
-    tags: []
+        blacklist:
+          tags:
+          - RechargeableCell # This is where we blacklist self recharging type cells, because FUCK infinite power :3 # Seriously, these are balanced around limited usage and power economy, self-recharging cells ruin that.
 - type: entity
-  id: ActionToggleLowReactor
-  name: Toggle Low Powered Reactor
-  description: Toggles the low powered reactor on and off.
+  id: ActionToggleAbility
+  name: Toggle built in function.
+  description: Toggles built in features of worn equipment. # Delibrately left vague to allow wiggle room for other activated abilities. Won't matter if the child entity has their own version and call defined.
   components:
   - type: InstantAction
     itemIconStyle: BigItem
     event: !type:ToggleActionEvent
-
 # Chemical Life Support System, makes use of the medibot component with a toggle. Should be able to customize the injected chemicals on the child item. -Keep away from combat equipment.
 - type: entity
   id: ClothingOuterLifeSupport
