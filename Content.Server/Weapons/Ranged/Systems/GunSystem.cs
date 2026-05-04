@@ -78,6 +78,7 @@ using Content.Shared.Interaction; // Frontier
 using Content.Shared.Examine; // Frontier
 using Content.Shared.Hands.Components;
 using Content.Shared.Power;
+using Content.Shared._Starlight.NullSpace;
 
 namespace Content.Server.Weapons.Ranged.Systems;
 
@@ -153,6 +154,15 @@ public sealed partial class GunSystem : SharedGunSystem
         mapDirection = toMap - fromMap.Position;
         mapAngle = mapDirection.ToAngle(); // HardLight
         var gunVelocity = Physics.GetMapLinearVelocity(fromEnt);
+
+        // GetMapLinearVelocity walks fromEnt's parent chain, but in ship-mounted gun paths
+        // (FireControl, SpaceArtillery) fromCoordinates can already be map-parented or race
+        // with reparenting, causing the walk to return Vector2.Zero. This makes shells appear
+        // to spawn from the ship's centre and lose forward range when the ship is moving.
+        // Override with the firing grid's authoritative LinearVelocity when we know it.
+        // No effect on off-grid handheld guns (gridUid is EntityUid.Invalid).
+        if (gridUid != EntityUid.Invalid && TryComp<PhysicsComponent>(gridUid, out var gridPhysics))
+            gunVelocity = gridPhysics.LinearVelocity;
 
         // I must be high because this was getting tripped even when true.
         // DebugTools.Assert(direction != Vector2.Zero);
@@ -249,6 +259,9 @@ public sealed partial class GunSystem : SharedGunSystem
                                 // Checks if the laser should pass over unless targeted by its user
                                 foreach (var collide in rayCastResults)
                                 {
+                                    if (hitscan.Reflective != ReflectType.Energy && HasComp<NullSpaceComponent>(collide.HitEntity))
+                                        continue;
+
                                     if (collide.HitEntity != gun.Target &&
                                         CompOrNull<RequireProjectileTargetComponent>(collide.HitEntity)?.Active == true)
                                     {
