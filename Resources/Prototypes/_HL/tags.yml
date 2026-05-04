@@ -37,6 +37,9 @@
   id: ResinStructures
 
 - type: Tag
+  id: RechargeableCell
+
+- type: Tag
   id: NFMagazineRifle20
 
 - type: Tag

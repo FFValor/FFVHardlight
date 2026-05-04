@@ -305,6 +305,9 @@
   - type: MachinePart # Frontier
     part: PowerCell # Frontier
     rating: 3 # Frontier: tier of this is arguable
+  - type: Tag
+    tags:
+      - RechargeableCell
 
 - type: entity
   parent: PowerCellMicroreactor
@@ -344,6 +347,9 @@
     - type: MachinePart # Frontier
       part: PowerCell # Frontier
       rating: 4 # Frontier: tier of this is arguable
+    - type: Tag
+      tags:
+        - RechargeableCell
 
 # Power cage (big heavy power cell for big devices)
 

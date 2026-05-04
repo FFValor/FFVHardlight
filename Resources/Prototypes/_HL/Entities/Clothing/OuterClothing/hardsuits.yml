@@ -629,7 +629,7 @@
 # Science Sealed Suits
 
 - type: entity
-  parent: ClothingOuterHardsuitBase
+  parent: [ClothingOuterHardsuitBase, ClothingOuterReactorLow]
   id: ClothingOuterHardsuitCourser
   name: courser exosuit
   description: A lightweight sealed environmental protection exosuit designed for science personnel. Features a wide spectrum anomaly scanner, and a high-powered reactor, capably of greatly increasing the wearer's speed, at a high power cost.
@@ -653,8 +653,8 @@
         Caustic: 0.8
         Heat: 0.7
   - type: ClothingSpeedModifier
-    walkModifier: 0.8
-    sprintModifier: 0.8
+    walkModifier: 0.9
+    sprintModifier: 0.9
   - type: ToggleableClothing
     clothingPrototype: ClothingHeadHelmetHardsuitCourser
   - type: HarpyHideWings # Frontier, needed for Harpies

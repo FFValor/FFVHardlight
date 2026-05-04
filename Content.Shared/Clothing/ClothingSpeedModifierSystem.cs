@@ -23,9 +23,11 @@ public sealed class ClothingSpeedModifierSystem : EntitySystem
 
         SubscribeLocalEvent<ClothingSpeedModifierComponent, ComponentGetState>(OnGetState);
         SubscribeLocalEvent<ClothingSpeedModifierComponent, ComponentHandleState>(OnHandleState);
+        SubscribeLocalEvent<ClothingSpeedModifierComponent, ComponentStartup>(OnComponentStartup);
+        SubscribeLocalEvent<ToggleableClothingSpeedModifierComponent, ComponentStartup>(OnToggleableStartup);
         SubscribeLocalEvent<ClothingSpeedModifierComponent, InventoryRelayedEvent<RefreshMovementSpeedModifiersEvent>>(OnRefreshMoveSpeed);
         SubscribeLocalEvent<ClothingSpeedModifierComponent, GetVerbsEvent<ExamineVerb>>(OnClothingVerbExamine);
-        SubscribeLocalEvent<ClothingSpeedModifierComponent, ItemToggledEvent>(OnToggled);
+        SubscribeLocalEvent<ToggleableClothingSpeedModifierComponent, ItemToggledEvent>(OnToggleableToggled);
     }
 
     private void OnGetState(EntityUid uid, ClothingSpeedModifierComponent component, ref ComponentGetState args)
@@ -54,8 +56,7 @@ public sealed class ClothingSpeedModifierSystem : EntitySystem
 
     private void OnRefreshMoveSpeed(EntityUid uid, ClothingSpeedModifierComponent component, InventoryRelayedEvent<RefreshMovementSpeedModifiersEvent> args)
     {
-        if (_toggle.IsActivated(uid))
-            args.Args.ModifySpeed(component.WalkModifier, component.SprintModifier);
+        args.Args.ModifySpeed(component.WalkModifier, component.SprintModifier);
     }
 
     private void OnClothingVerbExamine(EntityUid uid, ClothingSpeedModifierComponent component, GetVerbsEvent<ExamineVerb> args)
@@ -103,6 +104,68 @@ public sealed class ClothingSpeedModifierSystem : EntitySystem
         }
 
         _examine.AddDetailedExamineVerb(args, component, msg, Loc.GetString("clothing-speed-examinable-verb-text"), "/Textures/Interface/VerbIcons/outfit.svg.192dpi.png", Loc.GetString("clothing-speed-examinable-verb-message"));
+    }
+
+    private void OnComponentStartup(Entity<ClothingSpeedModifierComponent> ent, ref ComponentStartup args)
+    {
+        // If this component was added while equipped (e.g., via ComponentToggler), refresh movement modifiers
+        if (_container.TryGetContainingContainer((ent.Owner, null, null), out var container))
+        {
+            _movementSpeed.RefreshMovementSpeedModifiers(container.Owner);
+        }
+    }
+
+    private void OnToggleableStartup(Entity<ToggleableClothingSpeedModifierComponent> ent, ref ComponentStartup args)
+    {
+        if (!TryComp<ClothingSpeedModifierComponent>(ent.Owner, out var speedComp))
+        {
+            speedComp = EntityManager.AddComponent<ClothingSpeedModifierComponent>(ent.Owner);
+        }
+
+        if (_toggle.IsActivated(ent.Owner))
+        {
+            speedComp.WalkModifier = ent.Comp.ActivatedWalkModifier;
+            speedComp.SprintModifier = ent.Comp.ActivatedSprintModifier;
+        }
+        else
+        {
+            speedComp.WalkModifier = ent.Comp.DeactivatedWalkModifier;
+            speedComp.SprintModifier = ent.Comp.DeactivatedSprintModifier;
+        }
+
+        Dirty(ent.Owner, speedComp);
+
+        if (_container.TryGetContainingContainer((ent.Owner, null, null), out var container))
+        {
+            _movementSpeed.RefreshMovementSpeedModifiers(container.Owner);
+        }
+    }
+
+    private void OnToggleableToggled(Entity<ToggleableClothingSpeedModifierComponent> ent, ref ItemToggledEvent args)
+    {
+        if (!TryComp<ClothingSpeedModifierComponent>(ent, out var speedComp))
+            return;
+
+        if (args.Activated)
+        {
+            speedComp.WalkModifier = ent.Comp.ActivatedWalkModifier;
+            speedComp.SprintModifier = ent.Comp.ActivatedSprintModifier;
+        }
+        else
+        {
+            speedComp.WalkModifier = ent.Comp.DeactivatedWalkModifier;
+            speedComp.SprintModifier = ent.Comp.DeactivatedSprintModifier;
+        }
+
+        Dirty(ent, speedComp);
+
+        // Refresh movement modifiers
+        _movementSpeed.RefreshMovementSpeedModifiers(ent);
+
+        if (_container.TryGetContainingContainer((ent.Owner, null, null), out var container))
+        {
+            _movementSpeed.RefreshMovementSpeedModifiers(container.Owner);
+        }
     }
 
     private void OnToggled(Entity<ClothingSpeedModifierComponent> ent, ref ItemToggledEvent args)
