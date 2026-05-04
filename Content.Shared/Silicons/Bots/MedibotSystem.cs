@@ -74,15 +74,24 @@ public sealed class MedibotSystem : EntitySystem
 
     private void OnToggleClothing(Entity<MedibotComponent> medibot, ref ToggleClothingEvent args)
     {
-        var wearer = args.Performer;
-        if (wearer == EntityUid.Invalid)
-            return;
-
-        TryInjectSelf(medibot, wearer);
+        // Toggle the active state
+        if (medibot.Comp.IsActive)
+        {
+            // Turning off
+            medibot.Comp.IsActive = false;
+            medibot.Comp.CurrentWearer = EntityUid.Invalid;
+        }
+        else
+        {
+            // Turning on - store the wearer
+            medibot.Comp.IsActive = true;
+            medibot.Comp.CurrentWearer = args.Performer;
+            TryInjectSelf(medibot, args.Performer);
+        }
     }
     private bool IsWorn(Entity<MedibotComponent> medibot)
     {
-        if (!TryComp<TransformComponent>(medibot, out var transform))
+        if (!TryComp(medibot, out TransformComponent? transform))
             return false;
 
         return transform.ParentUid != EntityUid.Invalid;

@@ -1,20 +1,29 @@
 # This file is separate from other base clothing files as it's more intended for examples of how to use and balance certain abilities, rather than as a global base. Also to enforce my evil agenda through comments (IE, balancing concerns)
 # I'll try to keep all examples explained, and still usable for prototyping, but some may be more for demonstration purposes, and not intended to be used as is. I'll try to mark those clearly.
 
+- type: entity
+  id: ActionToggleAbility
+  name: Toggle built in function
+  description: Toggles built in features of worn equipment. # Delibrately left vague to allow wiggle room for other activated abilities. Won't matter if the child entity has their own version and call defined.
+  components:
+  - type: InstantAction
+    itemIconStyle: BigItem
+    event: !type:ToggleActionEvent
+
 # Reactors. The replacement for speed boots, intended (and encouraged to use for) niche outer equipment slot items -Keep away from combat equipment.
 - type: entity
   parent: [ClothingOuterVest, PowerCellSlotSmallItem, BaseToggleClothing]
   id: ClothingOuterReactorBase
-  name: speed reactor
+  name: reactor base item
   description: How are you seeing this?
   components:
   - type: ToggleClothing
     action: ActionToggleAbility
   - type: ToggleableClothingSpeedModifier # New component!, treat it as where you define whatever your gear's normal, inactive slowdown will be.
-    activatedWalkModifier: 1.25 # These two are where you define the active speed boost, balance power draw accordingly.
-    activatedSprintModifier: 1.25
-    deactivatedWalkModifier: 0.95 # These two functionally replace the basic speed modifier component.
-    deactivatedSprintModifier: 0.95
+    activatedWalkModifier: 1.7 # These two are where you define the active speed boost, balance power draw accordingly.
+    activatedSprintModifier: 1.7
+    deactivatedWalkModifier: 0.5 # These two functionally replace the basic speed modifier component.
+    deactivatedSprintModifier: 0.5
   - type: PowerCellDraw
     drawRate: 40 # The funny number you'll wanna play with a ton when balancing the speed boost.
   - type: ToggleCellDraw
@@ -25,14 +34,49 @@
         blacklist:
           tags:
           - RechargeableCell # This is where we blacklist self recharging type cells, because FUCK infinite power :3 # Seriously, these are balanced around limited usage and power economy, self-recharging cells ruin that.
+
 - type: entity
-  id: ActionToggleAbility
-  name: Toggle built in function.
-  description: Toggles built in features of worn equipment. # Delibrately left vague to allow wiggle room for other activated abilities. Won't matter if the child entity has their own version and call defined.
+  parent: ClothingOuterReactorBase
+  id: ClothingOuterReactorLow
+  name: low reactor base item
+  description: How are you seeing this?
   components:
-  - type: InstantAction
-    itemIconStyle: BigItem
-    event: !type:ToggleActionEvent
+  - type: ToggleableClothingSpeedModifier
+    activatedWalkModifier: 1.20
+    activatedSprintModifier: 1.20
+    deactivatedWalkModifier: 0.95
+    deactivatedSprintModifier: 0.95
+  - type: PowerCellDraw
+    drawRate: 9 # two full minutes of a small speed boost, balanced with a high cap cell's 1080
+
+- type: entity
+  parent: ClothingOuterReactorBase
+  id: ClothingOuterReactorMedium
+  name: medium reactor base item
+  description: How are you seeing this?
+  components:
+  - type: ToggleableClothingSpeedModifier
+    activatedWalkModifier: 1.40
+    activatedSprintModifier: 1.40
+    deactivatedWalkModifier: 0.95
+    deactivatedSprintModifier: 0.95
+  - type: PowerCellDraw
+    drawRate: 18 # One full minute of a medium speed boost, balanced with a high cap cell's 1080
+
+- type: entity
+  parent: ClothingOuterReactorBase
+  id: ClothingOuterReactorHigh
+  name: High reactor base item
+  description: How are you seeing this?
+  components:
+  - type: ToggleableClothingSpeedModifier
+    activatedWalkModifier: 1.6
+    activatedSprintModifier: 1.6
+    deactivatedWalkModifier: 0.95
+    deactivatedSprintModifier: 0.95
+  - type: PowerCellDraw
+    drawRate: 36 # 30 seconds of a massive speed boost, balanced with a high cap cell's 1080
+
 # Chemical Life Support System, makes use of the medibot component with a toggle. Should be able to customize the injected chemicals on the child item. -Keep away from combat equipment.
 - type: entity
   id: ClothingOuterLifeSupport
