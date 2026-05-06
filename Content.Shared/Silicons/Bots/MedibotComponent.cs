@@ -25,18 +25,6 @@ public sealed partial class MedibotComponent : Component
     /// </summary>
     [DataField("injectSound")]
     public SoundSpecifier InjectSound = new SoundPathSpecifier("/Audio/Items/hypospray.ogg");
-
-    /// <summary>
-    /// Whether this medibot is currently active (worn and toggled on).
-    /// </summary>
-    [DataField]
-    public bool IsActive = false;
-
-    /// <summary>
-    /// The entity currently wearing this medibot (when active).
-    /// </summary>
-    [ViewVariables]
-    public EntityUid CurrentWearer = EntityUid.Invalid;
 }
 
 /// <summary>
