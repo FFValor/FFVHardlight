@@ -1,14 +1,60 @@
 # This file is separate from other base clothing files as it's more intended for examples of how to use and balance certain abilities, rather than as a global base. Also to enforce my evil agenda through comments (IE, balancing concerns)
 # I'll try to keep all examples explained, and still usable for prototyping, but some may be more for demonstration purposes, and not intended to be used as is. I'll try to mark those clearly.
-
+# Base and parented entities needed for these to work properly.
 - type: entity
-  id: ActionToggleAbility
-  name: Toggle built in function
-  description: Toggles built in features of worn equipment. # Delibrately left vague to allow wiggle room for other activated abilities. Won't matter if the child entity has their own version and call defined.
+  abstract: true
+  id: ClothingHeadSuitWithLightNonrechargerBase
+  name: base hardsuit helmet with light with no automatic recharging effect
+  categories: [ HideSpawnMenu ]
   components:
-  - type: InstantAction
-    itemIconStyle: BigItem
-    event: !type:ToggleActionEvent
+  - type: Sprite
+    layers:
+    - state: icon
+    - state: icon-flash
+      visible: false
+      map: [ "light" ]
+  - type: Clothing
+    equippedPrefix: off
+  - type: ToggleableLightVisuals
+  - type: PointLight
+    enabled: false
+    radius: 3
+    energy: 2
+    mask: /Textures/Effects/LightMasks/cone.png
+    autoRot: true
+    netsync: false
+  - type: Appearance
+  - type: HandheldLight
+    addPrefix: true
+    blinkingBehaviourId: blinking
+    radiatingBehaviourId: radiating
+  - type: LightBehaviour
+    behaviours:
+      - !type:FadeBehaviour
+        id: radiating
+        interpolate: Linear
+        maxDuration: 2.0
+        startValue: 3.0
+        endValue: 2.0
+        isLooped: true
+        reverseWhenFinished: true
+      - !type:PulseBehaviour
+        id: blinking
+        interpolate: Nearest
+        maxDuration: 1.0
+        minValue: 0.1
+        maxValue: 2.0
+        isLooped: true
+  - type: PowerCellDraw
+    drawRate: 40 # The funny number you'll wanna play with a ton when balancing the speed boost.
+  - type: ToggleCellDraw
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        blacklist:
+          tags:
+          - RechargeableCell
 
 # Reactors. The replacement for speed boots, intended (and encouraged to use for) niche outer equipment slot items -Keep away from combat equipment.
 - type: entity
@@ -18,7 +64,7 @@
   description: How are you seeing this?
   components:
   - type: ToggleClothing
-    action: ActionToggleAbility
+    action: ActionToggleSuitAbility
   - type: ToggleableClothingSpeedModifier # New component!, treat it as where you define whatever your gear's normal, inactive slowdown will be.
     activatedWalkModifier: 1.7 # These two are where you define the active speed boost, balance power draw accordingly.
     activatedSprintModifier: 1.7
@@ -77,42 +123,158 @@
   - type: PowerCellDraw
     drawRate: 36 # 30 seconds of a massive speed boost, balanced with a high cap cell's 1080
 
-# Chemical Life Support System, makes use of the medibot component with a toggle. Should be able to customize the injected chemicals on the child item. -Keep away from combat equipment.
+# Wearable Anomaly Scanners, toggleable. high and low power versions.
 - type: entity
-  id: ClothingOuterLifeSupport
-  name: life support vest
-  description: A medical device that can autonomously inject chemicals when active.
-  parent: [ClothingOuterVest, BaseToggleClothing]
+  id: WearableAnomalyLocatorNarrow
+  parent: [PowerCellSlotSmallItem, BaseToggleClothing, BaseItem]
+  name: Short locator base item
+  description: How are you seeing this?
+  components:
+  # - type: PowerCellDraw # Isn't defined here, because reactor type items are the MAIN focus of power cell balancing. If the child lacks this, it needs to define it's own logical power draw.
+  #   drawRate: 1
+  - type: ToggleClothing
+    action: ActionToggleHelmetAbility
+  - type: ProximityBeeper
+  - type: ProximityDetector
+    range: 20 # The base locator is 20, and the wide is 40
+    criteria:
+      components:
+      - Anomaly # This is actually interesting, incredibly curious if this can be used for *other* types of detecting
+  - type: Beeper
+    isMuted: true
+    minBeepInterval: 0.15
+    maxBeepInterval: 1.00
+    beepSound:
+      path: "/Audio/Items/locator_beep.ogg"
+      params:
+        maxDistance: 1
+        volume: -8
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        blacklist:
+          tags:
+          - RechargeableCell # Again, blacklisting rechargers.
+
+- type: entity
+  id: WearableAnomalyLocatorWide
+  parent: [PowerCellSlotSmallItem, BaseToggleClothing, WearableAnomalyLocatorNarrow]
+  name: Wide locator base item
+  description: How are you seeing this?
   components:
   - type: ToggleClothing
-    action: ActionToggleLifeSupportSystem
-  - type: Medibot
-    treatments:
-      Alive:
-        reagent: Tricordrazine
-        quantity: 10
-        minDamage: 1
-      Critical:
-        reagent: Tricordrazine
-        quantity: 100
+    action: ActionToggleSuitAbility
+  - type: ProximityDetector
+    range: 40 # The base locator is 20, and the wide is 40
+    criteria:
+      components:
+      - Anomaly
+
+# Wearable Ore Scanners, toggleable
 - type: entity
-  id: ActionToggleLifeSupportSystem
-  name: Toggle Life Support System
-  description: Toggles chemical life support on and off.
+  id: WearableMineralScannerBase
+  parent: [PowerCellSlotSmallItem, BaseToggleClothing, BaseItem]
+  name: wearable mineral scanner
+  description: A scanner HUD that overlays information about nearby ore deposits.
   components:
-  - type: InstantAction
-    itemIconStyle: BigItem
-    event: !type:ToggleActionEvent
-# Suit Assistant Slot, Allows inserting of certain sized mechanical ghostroles, enables sharing bodily control. -Restricted to outer clothing that feasibly has the ability to move the wearer's body.
+  - type: ToggleClothing
+    action: ActionToggleHelmetAbility
+  - type: ItemToggleActiveSound
+    activeSound:
+      path: /Audio/Ambience/Objects/light_hum.ogg
+      params:
+        volume: -10
+        maxDistance: 1
+  - type: ItemToggle
+    soundActivate:
+      path: /Audio/Weapons/click.ogg
+      params:
+        maxDistance: 1
+  - type: ToggleCellDraw
+  - type: PowerCellDraw
+    drawRate: 2.4 # ~5 minutes on a medium power cell.
+    useRate: 0
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        blacklist:
+          tags:
+          - RechargeableCell # We get the pattern yet?
+  - type: MiningScanner
 
-# Wearable Anomaly Scanners, toggleable. high and low power versions.
-
-# Wearable Ore Scanners, toggleable. -Restrict to helmets for balancing and logic.
+- type: entity
+  id: WearableAdvancedMineralScannerBase
+  parent: [PowerCellSlotSmallItem, BaseToggleClothing, BaseItem, WearableMineralScannerBase]
+  name: wearable mineral scanner
+  description: A high quality scanner HUD that overlays information about nearby ore deposits. Features a much higher range.
+  components:
+  - type: ItemToggleActiveSound
+    activeSound:
+      path: /Audio/Ambience/Objects/light_hum.ogg
+      params:
+        volume: -10
+        maxDistance: 1
+  - type: ItemToggle
+    soundActivate:
+      path: /Audio/Weapons/click.ogg
+      params:
+        maxDistance: 1
+  - type: PowerCellDraw
+    drawRate: 1.2 # ~10 minutes on a medium power cell.
+    useRate: 0
+  - type: MiningScanner
+    range: 10
 
 # Wearable Gieger Counter, Atmos Scanner, and T-Ray Scanner
 
-# Wearable Binocular Enhancing, toggleable. -Restricted to head/mask/goggles, for obvious, eye related reasons.
+# Active Zoom Effect. -Restricted to head/mask/goggles, for obvious, eye related reasons.
+
+- type: entity
+  id: WearableZoomBase
+  parent: [PowerCellSlotSmallItem, BaseToggleClothing, BaseItem]
+  name: zoom HUD
+  description: A scanner HUD that enhances vision definition.
+  components:
+  - type: EyeCursorOffset
+    maxOffset: 5
+    pvsIncrease: 0.5
+  - type: PowerCellDraw
+    drawRate: 1.2 # ~10 minutes on a medium power cell.
+    useRate: 0
+
 
 # Inhalant Mask, functionally a reusable easily customizable cigarette. -Restricted to mask slots, to avoid stacking.
 
 # HUD elements, not toggleable. -# Do not stack multiple parents to create omni-HUDs -# Restricted to helmets, for balancing around HUD stacking.
+
+# Chemical Life Support System, makes use of the medibot component with a toggle. Should be able to customize the injected chemicals on the child item. -Keep away from combat equipment.
+
+# - type: entity
+#   id: ClothingOuterLifeSupport
+#   name: life support vest
+#   description: A medical device that can autonomously inject chemicals when active.
+#   parent: [ClothingOuterVest, BaseToggleClothing]
+#   components:
+#   - type: ToggleClothing
+#     action: ActionToggleLifeSupportSystem
+#   - type: Medibot
+#     treatments:
+#       Alive:
+#         reagent: Tricordrazine
+#         quantity: 10
+#         minDamage: 1
+#       Critical:
+#         reagent: Tricordrazine
+#         quantity: 100
+# - type: entity
+#   id: ActionToggleLifeSupportSystem
+#   name: Toggle Life Support System
+#   description: Toggles chemical life support on and off.
+#   components:
+#   - type: InstantAction
+#     itemIconStyle: BigItem
+#     event: !type:ToggleActionEvent
+
+# Suit Assistant Slot, Allows inserting of certain sized mechanical ghostroles, enables sharing bodily control. -Restricted to outer clothing that feasibly has the ability to move the wearer's body.

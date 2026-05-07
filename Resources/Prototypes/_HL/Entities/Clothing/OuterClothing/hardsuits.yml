@@ -594,6 +594,38 @@
 # Mercenary Hardsuits
 
 - type: entity
+  parent: [ ClothingOuterHardsuitBase, BaseC2ExpeditionContraband ]
+  id: ClothingOuterHardsuitScaf
+  name: SCAF hardsuit
+  description: A green and brown combat hardsuit. Old yet sturdy nonetheless.
+  components:
+  - type: Sprite
+    sprite: _NF/Clothing/OuterClothing/Hardsuits/scaf.rsi
+  - type: Clothing
+    sprite: _NF/Clothing/OuterClothing/Hardsuits/scaf.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.55
+        Slash: 0.55
+        Piercing: 0.45
+        Heat: 0.65
+        Caustic: 0.65
+  - type: ExplosionResistance
+    damageCoefficient: 0.55
+  - type: PressureProtection
+    highPressureMultiplier: 0.5
+    lowPressureMultiplier: 1000
+  - type: ClothingSpeedModifier
+    walkModifier: 0.9
+    sprintModifier: 0.9
+  - type: HeldSpeedModifier
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetHardsuitScaf
+  - type: PirateBountyItem
+    id: ClothingOuterHardsuitScaf
+
+- type: entity
   parent: ClothingOuterHardsuitBase
   id: ClothingOuterHardsuitMercMedic
   name: mercenary medic hardsuit
@@ -629,10 +661,10 @@
 # Science Sealed Suits
 
 - type: entity
-  parent: [ClothingOuterHardsuitBase, ClothingOuterReactorHigh]
+  parent: [ClothingOuterHardsuitBase, ClothingOuterReactorHigh, WearableAnomalyLocatorWide]
   id: ClothingOuterHardsuitCourser
   name: courser exosuit
-  description: A lightweight sealed environmental protection exosuit designed for science personnel. Features a wide spectrum anomaly scanner, and a high-powered reactor, capably of greatly increasing the wearer's speed, at a high power cost.
+  description: A lightweight sealed environmental protection exosuit designed for science personnel. Features a wide spectrum anomaly scanner synced with a high-powered reactor, capably of greatly increasing the wearer's speed, at a high power cost.
   components:
   - type: Sprite
     sprite: _HL/Clothing/OuterClothing/Hardsuits/courser_exosuit.rsi
@@ -721,3 +753,35 @@
   - type: HarpyHideWings # Frontier, needed for Harpies
   - type: StaticPrice # Frontier
     vendPrice: 7500
+
+# Salvage Sealed Suits
+
+- type: entity
+  parent: ClothingOuterHardsuitBase
+  id: ClothingOuterHardsuitSalvage
+  name: mining hardsuit
+  description: A special suit that protects against hazardous, low pressure environments. Has reinforced plating for wildlife encounters.
+  components:
+  - type: Sprite
+    sprite: Clothing/OuterClothing/Hardsuits/salvage.rsi
+  - type: Clothing
+    sprite: Clothing/OuterClothing/Hardsuits/salvage.rsi
+  - type: PressureProtection
+    highPressureMultiplier: 0.5
+    lowPressureMultiplier: 1000
+  - type: ExplosionResistance
+    damageCoefficient: 0.3
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.7
+        Slash: 0.7
+        Piercing: 0.5
+        Radiation: 0.3
+        Caustic: 0.7
+  - type: ClothingSpeedModifier
+    walkModifier: 0.75
+    sprintModifier: 0.75
+  - type: HeldSpeedModifier
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetHardsuitSalvage

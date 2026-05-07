@@ -86,6 +86,36 @@
 # Mercenary Hardsuit Helmets
 
 - type: entity
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightNonrechargerBase, WearableZoomBase ]
+  id: ClothingHeadHelmetHardsuitScaf
+  name: scaf hardsuit helmet
+  description: A robust, strong helmet. On the inside smells of pent up anger.
+#  categories: [ HideSpawnMenu ]
+  components:
+  - type: ToggleClothing
+    action: ActionToggleVisionZoom
+  - type: BreathMask
+  - type: Sprite
+    sprite: _NF/Clothing/Head/Hardsuits/scaf.rsi
+  - type: Clothing
+    sprite: _NF/Clothing/Head/Hardsuits/scaf.rsi
+  - type: PressureProtection
+    highPressureMultiplier: 0.525
+    lowPressureMultiplier: 1000
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.9
+        Slash: 0.9
+        Piercing: 0.8
+  - type: PointLight
+    radius: 7
+    energy: 2
+    #color: "#d6adff"
+
+
+
+- type: entity
   parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightBase ]
   id: ClothingHeadHelmetHardsuitMercMedic
   categories: [ HideSpawnMenu ]
@@ -107,7 +137,7 @@
 # Science Sealed Helmets
 
 - type: entity
-  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightBase ]
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightNonrechargerBase, WearableAnomalyLocatorNarrow ]
   id: ClothingHeadHelmetHardsuitCourser
   categories: [ HideSpawnMenu ]
   name: courser exosuit helmet
@@ -127,7 +157,7 @@
 # Medical Sealed Helmets
 
 - type: entity
-  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightBase ]
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightNonrechargerBase ]
   id: ClothingHeadHelmetHardsuitPractitioner
   categories: [ HideSpawnMenu ]
   name: practitioner exosuit helmet
@@ -147,7 +177,7 @@
 # Engineering Sealed Helmets
 
 - type: entity
-  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightBase ]
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightNonrechargerBase ]
   id: ClothingHeadHelmetHardsuitAssessor
   categories: [ HideSpawnMenu ]
   name: assessor exosuit helmet
@@ -157,6 +187,25 @@
     sprite: _NF/Clothing/Head/Helmets/fsc_eva_helmet.rsi
   - type: Clothing
     sprite: _NF/Clothing/Head/Helmets/fsc_eva_helmet.rsi
+  - type: PressureProtection
+    highPressureMultiplier: 0.525
+    lowPressureMultiplier: 1000
+  - type: PointLight
+    radius: 7
+    energy: 3
+
+# Salvage Sealed Helmets
+
+- type: entity
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightNonrechargerBase, WearableAdvancedMineralScannerBase ]
+  id: ClothingHeadHelmetHardsuitSalvage
+  name: salvage hardsuit helmet
+  description: A special helmet designed for work in a hazardous, low pressure environment. Has reinforced plating for wildlife encounters and dual floodlights.
+  components:
+  - type: Sprite
+    sprite: Clothing/Head/Hardsuits/salvage.rsi
+  - type: Clothing
+    sprite: Clothing/Head/Hardsuits/salvage.rsi
   - type: PressureProtection
     highPressureMultiplier: 0.525
     lowPressureMultiplier: 1000

@@ -2,6 +2,7 @@ using System.Numerics;
 using Content.Client.Movement.Components;
 using Content.Client.Viewport;
 using Content.Shared.Camera;
+using Content.Shared.Item.ItemToggle.Components;
 using Robust.Client.Graphics;
 using Robust.Client.Input;
 using Robust.Shared.Map;
@@ -22,6 +23,7 @@ public sealed partial class EyeCursorOffsetSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<EyeCursorOffsetComponent, GetEyeOffsetEvent>(OnGetEyeOffsetEvent);
+        // SubscribeLocalEvent<EyeCursorOffsetComponent, ItemToggledEvent>(OnToggled);
     }
 
     private void OnGetEyeOffsetEvent(EntityUid uid, EyeCursorOffsetComponent component, ref GetEyeOffsetEvent args)
@@ -32,6 +34,15 @@ public sealed partial class EyeCursorOffsetSystem : EntitySystem
 
         args.Offset += offset.Value;
     }
+
+    // private void OnToggled(EntityUid uid, EyeCursorOffsetComponent component, ref ItemToggledEvent args)
+    // {
+    //     var offset = OffsetAfterMouse(uid, component);
+    //     if (offset == null)
+    //         return;
+
+    //     args.Offset += offset.Value;
+    // }
 
     public Vector2? OffsetAfterMouse(EntityUid uid, EyeCursorOffsetComponent? component)
     {

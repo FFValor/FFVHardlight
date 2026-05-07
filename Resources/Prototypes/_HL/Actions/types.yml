@@ -58,3 +58,31 @@
     event:
       !type:FabricateActionEvent
       fabrication: Paper
+
+# Suit activate events.
+- type: entity
+  id: ActionToggleHelmetAbility
+  name: Toggle built in function
+  description: Toggles built in features of the helmet.
+  components:
+  - type: InstantAction
+    itemIconStyle: BigItem
+    event: !type:ToggleActionEvent
+
+- type: entity
+  id: ActionToggleSuitAbility
+  name: Toggle built in function
+  description: Toggles built in features of the suit.
+  components:
+  - type: InstantAction
+    itemIconStyle: BigItem
+    event: !type:ToggleActionEvent
+
+- type: entity
+  id: ActionToggleVisionZoom
+  name: Toggle vision zoom
+  description: Toggles built in visor zoom for enhanced vision.
+  components:
+  - type: InstantAction
+    itemIconStyle: BigItem
+    event: !type:GetEyeOffsetEvent
