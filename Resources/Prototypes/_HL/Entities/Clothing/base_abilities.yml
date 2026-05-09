@@ -1,64 +1,9 @@
 # This file is separate from other base clothing files as it's more intended for examples of how to use and balance certain abilities, rather than as a global base. Also to enforce my evil agenda through comments (IE, balancing concerns)
 # I'll try to keep all examples explained, and still usable for prototyping, but some may be more for demonstration purposes, and not intended to be used as is. I'll try to mark those clearly.
-# Base and parented entities needed for these to work properly.
-- type: entity
-  abstract: true
-  id: ClothingHeadSuitWithLightNonrechargerBase
-  name: base hardsuit helmet with light with no automatic recharging effect
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: Sprite
-    layers:
-    - state: icon
-    - state: icon-flash
-      visible: false
-      map: [ "light" ]
-  - type: Clothing
-    equippedPrefix: off
-  - type: ToggleableLightVisuals
-  - type: PointLight
-    enabled: false
-    radius: 3
-    energy: 2
-    mask: /Textures/Effects/LightMasks/cone.png
-    autoRot: true
-    netsync: false
-  - type: Appearance
-  - type: HandheldLight
-    addPrefix: true
-    blinkingBehaviourId: blinking
-    radiatingBehaviourId: radiating
-  - type: LightBehaviour
-    behaviours:
-      - !type:FadeBehaviour
-        id: radiating
-        interpolate: Linear
-        maxDuration: 2.0
-        startValue: 3.0
-        endValue: 2.0
-        isLooped: true
-        reverseWhenFinished: true
-      - !type:PulseBehaviour
-        id: blinking
-        interpolate: Nearest
-        maxDuration: 1.0
-        minValue: 0.1
-        maxValue: 2.0
-        isLooped: true
-  - type: PowerCellDraw
-    drawRate: 40 # The funny number you'll wanna play with a ton when balancing the speed boost.
-  - type: ToggleCellDraw
-  - type: ItemSlots
-    slots:
-      cell_slot:
-        name: power-cell-slot-component-slot-name-default
-        blacklist:
-          tags:
-          - RechargeableCell
 
 # Reactors. The replacement for speed boots, intended (and encouraged to use for) niche outer equipment slot items -Keep away from combat equipment.
 - type: entity
-  parent: [ClothingOuterVest, PowerCellSlotSmallItem, BaseToggleClothing]
+  parent: PowerCellSlotSmallItem
   id: ClothingOuterReactorBase
   name: reactor base item
   description: How are you seeing this?
@@ -130,8 +75,12 @@
   name: Short locator base item
   description: How are you seeing this?
   components:
-  # - type: PowerCellDraw # Isn't defined here, because reactor type items are the MAIN focus of power cell balancing. If the child lacks this, it needs to define it's own logical power draw.
-  #   drawRate: 1
+  - type: ItemToggleActiveSound
+    activeSound:
+      path: /Audio/Ambience/Objects/light_hum.ogg
+      params:
+        volume: -10
+        maxDistance: 1
   - type: ToggleClothing
     action: ActionToggleHelmetAbility
   - type: ProximityBeeper
@@ -139,7 +88,7 @@
     range: 20 # The base locator is 20, and the wide is 40
     criteria:
       components:
-      - Anomaly # This is actually interesting, incredibly curious if this can be used for *other* types of detecting
+      - Anomaly
   - type: Beeper
     isMuted: true
     minBeepInterval: 0.15
@@ -159,7 +108,7 @@
 
 - type: entity
   id: WearableAnomalyLocatorWide
-  parent: [PowerCellSlotSmallItem, BaseToggleClothing, WearableAnomalyLocatorNarrow]
+  parent: WearableAnomalyLocatorNarrow
   name: Wide locator base item
   description: How are you seeing this?
   components:
@@ -174,12 +123,10 @@
 # Wearable Ore Scanners, toggleable
 - type: entity
   id: WearableMineralScannerBase
-  parent: [PowerCellSlotSmallItem, BaseToggleClothing, BaseItem]
+  parent: [PowerCellSlotSmallItem, BaseItem]
   name: wearable mineral scanner
   description: A scanner HUD that overlays information about nearby ore deposits.
   components:
-  - type: ToggleClothing
-    action: ActionToggleHelmetAbility
   - type: ItemToggleActiveSound
     activeSound:
       path: /Audio/Ambience/Objects/light_hum.ogg
@@ -187,6 +134,7 @@
         volume: -10
         maxDistance: 1
   - type: ItemToggle
+    # onUse: false
     soundActivate:
       path: /Audio/Weapons/click.ogg
       params:
@@ -206,21 +154,10 @@
 
 - type: entity
   id: WearableAdvancedMineralScannerBase
-  parent: [PowerCellSlotSmallItem, BaseToggleClothing, BaseItem, WearableMineralScannerBase]
+  parent: WearableMineralScannerBase
   name: wearable mineral scanner
   description: A high quality scanner HUD that overlays information about nearby ore deposits. Features a much higher range.
   components:
-  - type: ItemToggleActiveSound
-    activeSound:
-      path: /Audio/Ambience/Objects/light_hum.ogg
-      params:
-        volume: -10
-        maxDistance: 1
-  - type: ItemToggle
-    soundActivate:
-      path: /Audio/Weapons/click.ogg
-      params:
-        maxDistance: 1
   - type: PowerCellDraw
     drawRate: 1.2 # ~10 minutes on a medium power cell.
     useRate: 0
@@ -228,6 +165,17 @@
     range: 10
 
 # Wearable Gieger Counter, Atmos Scanner, and T-Ray Scanner
+
+- type: entity
+  parent: BaseItem
+  id: WearableGeigerCounter
+  name: wearable geiger counter
+  description: A handheld device used for detecting and measuring radiation pulses.
+  components:
+  - type: Geiger
+    showControl: true
+    showExamine: true
+    broadcastAudio: true
 
 # Active Zoom Effect. -Restricted to head/mask/goggles, for obvious, eye related reasons.
 
@@ -240,9 +188,6 @@
   - type: EyeCursorOffset
     maxOffset: 5
     pvsIncrease: 0.5
-  - type: PowerCellDraw
-    drawRate: 1.2 # ~10 minutes on a medium power cell.
-    useRate: 0
 
 
 # Inhalant Mask, functionally a reusable easily customizable cigarette. -Restricted to mask slots, to avoid stacking.
@@ -278,3 +223,59 @@
 #     event: !type:ToggleActionEvent
 
 # Suit Assistant Slot, Allows inserting of certain sized mechanical ghostroles, enables sharing bodily control. -Restricted to outer clothing that feasibly has the ability to move the wearer's body.
+
+# Base and parented entities needed for these to work properly.
+- type: entity
+  abstract: true
+  id: ClothingHeadSuitWithLightNonrechargerBase
+  name: base hardsuit helmet with light with no automatic recharging effect
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Sprite
+    layers:
+    - state: icon
+    - state: icon-flash
+      visible: false
+      map: [ "light" ]
+  - type: Clothing
+    equippedPrefix: off
+  - type: ToggleableLightVisuals
+  - type: PointLight
+    enabled: false
+    radius: 3
+    energy: 2
+    mask: /Textures/Effects/LightMasks/cone.png
+    autoRot: true
+    netsync: false
+  - type: Appearance
+  - type: HandheldLight
+    addPrefix: true
+    blinkingBehaviourId: blinking
+    radiatingBehaviourId: radiating
+  - type: LightBehaviour
+    behaviours:
+      - !type:FadeBehaviour
+        id: radiating
+        interpolate: Linear
+        maxDuration: 2.0
+        startValue: 3.0
+        endValue: 2.0
+        isLooped: true
+        reverseWhenFinished: true
+      - !type:PulseBehaviour
+        id: blinking
+        interpolate: Nearest
+        maxDuration: 1.0
+        minValue: 0.1
+        maxValue: 2.0
+        isLooped: true
+  - type: PowerCellDraw
+    drawRate: 40
+  - type: ToggleCellDraw
+  - type: ItemSlots
+    slots:
+      cell_slot:
+        name: power-cell-slot-component-slot-name-default
+        blacklist:
+          tags:
+          - RechargeableCell

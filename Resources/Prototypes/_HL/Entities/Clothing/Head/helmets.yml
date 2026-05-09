@@ -194,10 +194,21 @@
     radius: 7
     energy: 3
 
+- type: entity
+  parent: ClothingHeadHelmetHardsuitBasic
+  id: ClothingHeadHelmetHEV
+  name: H.E.V helmet
+  description: Not included in a set with crowbar, long jump module and gravity manipulation device.
+  components:
+  - type: Sprite
+    sprite: Goobstation/Clothing/Head/Helmets/hev.rsi
+  - type: Clothing
+    sprite: Goobstation/Clothing/Head/Helmets/hev.rsi
+
 # Salvage Sealed Helmets
 
 - type: entity
-  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightNonrechargerBase, WearableAdvancedMineralScannerBase ]
+  parent: [ ClothingHeadHardsuitBase, ClothingHeadSuitWithLightNonrechargerBase, WearableMineralScannerBase ]
   id: ClothingHeadHelmetHardsuitSalvage
   name: salvage hardsuit helmet
   description: A special helmet designed for work in a hazardous, low pressure environment. Has reinforced plating for wildlife encounters and dual floodlights.

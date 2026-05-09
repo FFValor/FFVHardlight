@@ -2,6 +2,7 @@ using Content.Shared._NF.Mining.Components; // Frontier
 using Content.Shared.Inventory;
 using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Mining.Components;
+using Content.Shared.Actions;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Network;
@@ -23,6 +24,8 @@ public sealed partial class MiningScannerSystem : EntitySystem // Frontier: part
         SubscribeLocalEvent<MiningScannerComponent, EntGotInsertedIntoContainerMessage>(OnInserted);
         SubscribeLocalEvent<MiningScannerComponent, EntGotRemovedFromContainerMessage>(OnRemoved);
         SubscribeLocalEvent<MiningScannerComponent, ItemToggledEvent>(OnToggled);
+        SubscribeLocalEvent<MiningScannerComponent, ToggleScannerActionEvent>(OnToggleScanner);
+        SubscribeLocalEvent<MiningScannerComponent, GetItemActionsEvent>(OnGetActions);
 
         NFInitialize(); // Frontier
     }
@@ -43,18 +46,35 @@ public sealed partial class MiningScannerSystem : EntitySystem // Frontier: part
             UpdateViewerComponent(container.Owner);
     }
 
-    public void UpdateViewerComponent(EntityUid uid)
+    private void OnToggleScanner(Entity<MiningScannerComponent> ent, ref ToggleScannerActionEvent args)
+    {
+        if (_container.TryGetContainingContainer((ent.Owner, null, null), out var container))
+        {
+            ent.Comp.Activated = !ent.Comp.Activated;
+            UpdateViewerComponent(container.Owner, true);
+        }
+    }
+
+
+    private void OnGetActions(Entity<MiningScannerComponent> scanner, ref GetItemActionsEvent args)
+    {
+        if (scanner.Comp.CanInteractUse)
+            args.AddAction(ref scanner.Comp.ToggleActionEntity, scanner.Comp.ToggleAction);
+    }
+
+    public void UpdateViewerComponent(EntityUid uid, bool useScannerEnabled = false)
     {
         Entity<MiningScannerComponent>? scannerEnt = null;
 
         var ents = _inventory.GetHandOrInventoryEntities(uid);
         foreach (var ent in ents)
         {
+            TryComp<ItemToggleComponent>(ent, out var toggle);
             if (!TryComp<MiningScannerComponent>(ent, out var scannerComponent) ||
-                !TryComp<ItemToggleComponent>(ent, out var toggle))
+                (toggle == null && !useScannerEnabled))
                 continue;
 
-            if (!toggle.Activated)
+            if (toggle != null && !toggle.Activated || (useScannerEnabled && !scannerComponent.Activated))
                 continue;
 
             if (scannerEnt == null || scannerComponent.Range > scannerEnt.Value.Comp.Range)

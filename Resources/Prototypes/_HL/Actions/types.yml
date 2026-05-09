@@ -86,3 +86,14 @@
   - type: InstantAction
     itemIconStyle: BigItem
     event: !type:GetEyeOffsetEvent
+
+- type: entity
+  id: ActionToggleScanner
+  name: Toggle built in mining scanner.
+  description: Toggles built in ore finding functions.
+  components:
+  - type: InstantAction
+    useDelay: 1
+    icon: { sprite: Objects/Specific/Mining/mineral_scanner.rsi, state: adv }
+    iconOn: { sprite: Objects/Specific/Mining/mineral_scanner.rsi, state: adv-o }
+    event: !type:ToggleScannerActionEvent
