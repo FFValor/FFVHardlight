@@ -2,6 +2,7 @@
 using Content.Shared.ProximityDetection.Systems;
 using Content.Shared.Whitelist;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared.ProximityDetection.Components;
 /// <summary>
@@ -10,6 +11,19 @@ namespace Content.Shared.ProximityDetection.Components;
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState ,Access(typeof(ProximityDetectionSystem))]
 public sealed partial class ProximityDetectorComponent : Component
 {
+    /// <summary>
+    /// Whether or not the detector is active. Toggled by the user, determines whether to run the update logic or not.
+    /// </summary>
+    [DataField]
+    public bool Activated = false;
+
+    /// <summary>
+    /// Whether or not the detector can be toggled via standard interactions
+    /// (alt verbs, using in hand, etc)
+    /// </summary>
+    [DataField]
+    public bool CanInteractUse = true;
+
     /// <summary>
     /// The criteria used to filter entities
     /// Note: RequireAll is only supported for tags, all components are required to count as a match!
@@ -40,4 +54,11 @@ public sealed partial class ProximityDetectorComponent : Component
 
     [DataField, ViewVariables(VVAccess.ReadWrite), AutoNetworkedField]
     public float UpdateRate = 0.3f;
+
+///Action
+    [DataField]
+    public EntProtoId ToggleAction = "ActionToggleAnomScanner";
+
+    [DataField]
+    public EntityUid? ToggleActionEntity;
 }

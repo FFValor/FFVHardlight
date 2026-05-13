@@ -1,6 +1,8 @@
 ﻿using Content.Shared.FixedPoint;
 using Content.Shared.ProximityDetection.Components;
 using Robust.Shared.Serialization;
+using Content.Shared.Actions;
+using Robust.Shared.Prototypes;
 
 namespace Content.Shared.ProximityDetection;
 
@@ -13,5 +15,6 @@ public record struct ProximityTargetUpdatedEvent(ProximityDetectorComponent Dete
 [ByRefEvent]
 public record struct NewProximityTargetEvent(ProximityDetectorComponent Detector, EntityUid? Target);
 
-
-
+public sealed partial class ToggleLocatorActionEvent : InstantActionEvent
+{
+}

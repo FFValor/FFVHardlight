@@ -97,3 +97,22 @@
     icon: { sprite: Objects/Specific/Mining/mineral_scanner.rsi, state: adv }
     iconOn: { sprite: Objects/Specific/Mining/mineral_scanner.rsi, state: adv-o }
     event: !type:ToggleScannerActionEvent
+
+- type: entity
+  id: ActionToggleAnomScanner
+  name: Toggle built in anomaly locator.
+  description: Toggles built in anomaly detection functions.
+  components:
+  - type: InstantAction
+    useDelay: 1
+    icon: { sprite: Objects/Specific/Research/anomalyscanner.rsi, state: icon }
+    event: !type:ToggleLocatorActionEvent
+
+- type: entity
+  id: ActionToggleFlashLenses
+  name: Toggle flash lenses
+  description: Flips up or down the flash lenses, protecting eyesight at the cost of vision radius.
+  components:
+  - type: InstantAction
+    icon: { sprite: Clothing/Eyes/Misc/blindfold.rsi, state: icon }
+    event: !type:ToggleActionEvent

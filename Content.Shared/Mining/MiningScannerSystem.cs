@@ -1,5 +1,6 @@
 using Content.Shared._NF.Mining.Components; // Frontier
 using Content.Shared.Inventory;
+using Content.Shared.Item.ItemToggle;
 using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Mining.Components;
 using Content.Shared.Actions;
@@ -7,6 +8,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Network;
 using Robust.Shared.Timing;
+using Content.Shared.Examine;
 
 namespace Content.Shared.Mining;
 
@@ -17,6 +19,7 @@ public sealed partial class MiningScannerSystem : EntitySystem // Frontier: part
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
+    [Dependency] private readonly ItemToggleSystem _toggle = default!;
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -26,6 +29,7 @@ public sealed partial class MiningScannerSystem : EntitySystem // Frontier: part
         SubscribeLocalEvent<MiningScannerComponent, ItemToggledEvent>(OnToggled);
         SubscribeLocalEvent<MiningScannerComponent, ToggleScannerActionEvent>(OnToggleScanner);
         SubscribeLocalEvent<MiningScannerComponent, GetItemActionsEvent>(OnGetActions);
+        SubscribeLocalEvent<MiningScannerComponent, ExaminedEvent>(OnExamine);
 
         NFInitialize(); // Frontier
     }
@@ -42,6 +46,13 @@ public sealed partial class MiningScannerSystem : EntitySystem // Frontier: part
 
     private void OnToggled(Entity<MiningScannerComponent> ent, ref ItemToggledEvent args)
     {
+        ent.Comp.Activated = args.Activated;
+        // Sync with ItemToggle if present
+        if (TryComp<ItemToggleComponent>(ent.Owner, out var toggle))
+        {
+            toggle.Activated = ent.Comp.Activated;
+            Dirty(ent.Owner, toggle);
+        }
         if (_container.TryGetContainingContainer((ent.Owner, null, null), out var container))
             UpdateViewerComponent(container.Owner);
     }
@@ -51,6 +62,12 @@ public sealed partial class MiningScannerSystem : EntitySystem // Frontier: part
         if (_container.TryGetContainingContainer((ent.Owner, null, null), out var container))
         {
             ent.Comp.Activated = !ent.Comp.Activated;
+            // Sync with ItemToggle if present
+            if (TryComp<ItemToggleComponent>(ent.Owner, out var toggle))
+            {
+                toggle.Activated = ent.Comp.Activated;
+                Dirty(ent.Owner, toggle);
+            }
             UpdateViewerComponent(container.Owner, true);
         }
     }
@@ -61,7 +78,6 @@ public sealed partial class MiningScannerSystem : EntitySystem // Frontier: part
         if (scanner.Comp.CanInteractUse)
             args.AddAction(ref scanner.Comp.ToggleActionEntity, scanner.Comp.ToggleAction);
     }
-
     public void UpdateViewerComponent(EntityUid uid, bool useScannerEnabled = false)
     {
         Entity<MiningScannerComponent>? scannerEnt = null;
@@ -71,10 +87,10 @@ public sealed partial class MiningScannerSystem : EntitySystem // Frontier: part
         {
             TryComp<ItemToggleComponent>(ent, out var toggle);
             if (!TryComp<MiningScannerComponent>(ent, out var scannerComponent) ||
-                (toggle == null && !useScannerEnabled))
+                toggle == null && !useScannerEnabled)
                 continue;
 
-            if (toggle != null && !toggle.Activated || (useScannerEnabled && !scannerComponent.Activated))
+            if (toggle != null && !toggle.Activated || useScannerEnabled && !scannerComponent.Activated)
                 continue;
 
             if (scannerEnt == null || scannerComponent.Range > scannerEnt.Value.Comp.Range)
@@ -99,6 +115,14 @@ public sealed partial class MiningScannerSystem : EntitySystem // Frontier: part
         }
     }
 
+    private void OnExamine(Entity<MiningScannerComponent> scanner, ref ExaminedEvent args)
+    {
+        args.PushMarkup(Loc.GetString(
+            scanner.Comp.Activated
+            ? "mineral-scanner-on-examine-is-on-message"
+            : "mineral-scanner-on-examine-is-off-message"
+            ));
+    }
     public override void Update(float frameTime)
     {
         base.Update(frameTime);

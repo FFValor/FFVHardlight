@@ -3,6 +3,8 @@
 using Content.Shared.ProximityDetection.Components;
 using Content.Shared.Tag;
 using Robust.Shared.Network;
+using Content.Shared.Examine;
+using Content.Shared.Actions;
 
 namespace Content.Shared.ProximityDetection.Systems;
 
@@ -24,6 +26,9 @@ public sealed class ProximityDetectionSystem : EntitySystem
 
         SubscribeLocalEvent<ProximityDetectorComponent, ComponentInit>(OnCompInit);
         SubscribeLocalEvent<ProximityDetectorComponent, ItemToggledEvent>(OnToggled);
+        SubscribeLocalEvent<ProximityDetectorComponent, ToggleLocatorActionEvent>(OnToggleLocator);
+        SubscribeLocalEvent<ProximityDetectorComponent, GetItemActionsEvent>(OnGetActions);
+        SubscribeLocalEvent<ProximityDetectorComponent, ExaminedEvent>(OnExamine);
     }
 
     private void OnCompInit(EntityUid uid, ProximityDetectorComponent component, ComponentInit args)
@@ -56,6 +61,35 @@ public sealed class ProximityDetectionSystem : EntitySystem
     private void OnToggled(Entity<ProximityDetectorComponent> ent, ref ItemToggledEvent args)
     {
         if (args.Activated)
+        {
+            RunUpdate_Internal(ent, ent.Comp);
+            return;
+        }
+
+        var noDetectEvent = new ProximityTargetUpdatedEvent(ent.Comp, Target: null, ent.Comp.Distance);
+        RaiseLocalEvent(ent, ref noDetectEvent);
+
+        ent.Comp.AccumulatedFrameTime = 0;
+        Dirty(ent, ent.Comp);
+    }
+
+    private void OnGetActions(Entity<ProximityDetectorComponent> detector, ref GetItemActionsEvent args)
+    {
+        if (detector.Comp.CanInteractUse)
+            args.AddAction(ref detector.Comp.ToggleActionEntity, detector.Comp.ToggleAction);
+    }
+
+    private void OnToggleLocator(Entity<ProximityDetectorComponent> ent, ref ToggleLocatorActionEvent args)
+    {
+        ent.Comp.Activated = !ent.Comp.Activated;
+        // Sync with ItemToggle if present
+        if (TryComp<ItemToggleComponent>(ent.Owner, out var toggle))
+        {
+            toggle.Activated = ent.Comp.Activated;
+            Dirty(ent.Owner, toggle);
+        }
+
+        if (ent.Comp.Activated)
         {
             RunUpdate_Internal(ent, ent.Comp);
             return;
@@ -207,6 +241,14 @@ public sealed class ProximityDetectionSystem : EntitySystem
         var targetUpdatedEvent = new ProximityTargetUpdatedEvent(detector, closestEnt, closestDistance);
         RaiseLocalEvent(owner, ref targetUpdatedEvent);
         Dirty(owner, detector);
+    }
+    private void OnExamine(Entity<ProximityDetectorComponent> detector, ref ExaminedEvent args)
+    {
+        args.PushMarkup(Loc.GetString(
+            detector.Comp.Activated
+            ? "proximity-detector-examine-is-on-message"
+            : "proximity-detector-examine-is-off-message"
+            ));
     }
 
     public void SetRange(EntityUid owner, float newRange, ProximityDetectorComponent? detector = null)

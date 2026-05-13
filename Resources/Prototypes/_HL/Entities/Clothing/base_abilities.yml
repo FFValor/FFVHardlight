@@ -71,7 +71,7 @@
 # Wearable Anomaly Scanners, toggleable. high and low power versions.
 - type: entity
   id: WearableAnomalyLocatorNarrow
-  parent: [PowerCellSlotSmallItem, BaseToggleClothing, BaseItem]
+  parent: [PowerCellSlotSmallItem, BaseItem]
   name: Short locator base item
   description: How are you seeing this?
   components:
@@ -81,8 +81,16 @@
       params:
         volume: -10
         maxDistance: 1
-  - type: ToggleClothing
-    action: ActionToggleHelmetAbility
+  - type: ItemToggle
+    onUse: false
+    soundActivate:
+      path: /Audio/Weapons/click.ogg
+      params:
+        maxDistance: 1
+  - type: ToggleCellDraw
+  - type: PowerCellDraw
+    drawRate: 1.2
+    useRate: 0
   - type: ProximityBeeper
   - type: ProximityDetector
     range: 20 # The base locator is 20, and the wide is 40
@@ -112,8 +120,6 @@
   name: Wide locator base item
   description: How are you seeing this?
   components:
-  - type: ToggleClothing
-    action: ActionToggleSuitAbility
   - type: ProximityDetector
     range: 40 # The base locator is 20, and the wide is 40
     criteria:
@@ -134,7 +140,7 @@
         volume: -10
         maxDistance: 1
   - type: ItemToggle
-    # onUse: false
+    onUse: false
     soundActivate:
       path: /Audio/Weapons/click.ogg
       params:
@@ -189,6 +195,26 @@
     maxOffset: 5
     pvsIncrease: 0.5
 
+# Welding Blinders, toggled but requires no power.
+
+- type: entity
+  id: ClothingHeadToggledFlashLenses
+  parent: [BaseToggleClothing, BaseItem]
+  name: flash lenses
+  description: a simple set of non-reactive welding lenses. Only work when activated and blocking vision, but grants full immunity to welding arcs or flashes.
+  components:
+  - type: ToggleClothing
+    action: ActionToggleFlashLenses
+  - type: ComponentToggler
+    parent: true
+    components:
+    - type: Blindfold
+    - type: FlashImmunity
+    - type: EyeProtection
+    removeComponents:
+    - type: Blindfold
+    - type: FlashImmunity
+    - type: EyeProtection
 
 # Inhalant Mask, functionally a reusable easily customizable cigarette. -Restricted to mask slots, to avoid stacking.
 
