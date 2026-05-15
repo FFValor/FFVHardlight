@@ -203,18 +203,21 @@
   name: flash lenses
   description: a simple set of non-reactive welding lenses. Only work when activated and blocking vision, but grants full immunity to welding arcs or flashes.
   components:
+  - type: ItemToggle
+    onUse: false
+    soundActivate:
+      path: /Audio/Weapons/click.ogg
+      params:
+        maxDistance: 1
   - type: ToggleClothing
     action: ActionToggleFlashLenses
+  - type: WeldingMask
   - type: ComponentToggler
-    parent: true
     components:
-    - type: Blindfold
     - type: FlashImmunity
     - type: EyeProtection
-    removeComponents:
-    - type: Blindfold
-    - type: FlashImmunity
-    - type: EyeProtection
+    - type: VisionDarkener
+      strength: 6
 
 # Inhalant Mask, functionally a reusable easily customizable cigarette. -Restricted to mask slots, to avoid stacking.
 

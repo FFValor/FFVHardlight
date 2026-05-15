@@ -114,5 +114,14 @@
   description: Flips up or down the flash lenses, protecting eyesight at the cost of vision radius.
   components:
   - type: InstantAction
-    icon: { sprite: Clothing/Eyes/Misc/blindfold.rsi, state: icon }
-    event: !type:ToggleActionEvent
+    icon: { sprite: Clothing/Head/Welding/welding.rsi, state: icon }
+    event: !type:TogglerComponentActionEvent
+
+# - type: entity
+#   id: ActionToggleComponent
+#   name: Swap modes
+#   description: Swaps between two modes.
+#   components:
+#   - type: InstantAction
+#     itemIconStyle: BigItem
+#     event: !type:TogglerComponentActionEvent

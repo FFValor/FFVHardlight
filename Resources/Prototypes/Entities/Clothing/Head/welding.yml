@@ -8,7 +8,7 @@
     sprite: Clothing/Head/Welding/welding.rsi
     layers:
     - state: icon
-      map: [ "enum.ToggleableVisuals.Layer" ]
+      map: [ "enum.ToggleVisuals.Layer" ]
   - type: Clothing
     sprite: Clothing/Head/Welding/welding.rsi
   - type: Item
@@ -25,8 +25,8 @@
   - type: WeldingMask
   - type: GenericVisualizer
     visuals:
-      enum.ToggleableVisuals.Enabled:
-        enum.ToggleableVisuals.Layer:
+      enum.ToggleVisuals.Toggled:
+        enum.ToggleVisuals.Layer:
           True: {state: icon}
           False: {state: icon-up}
   - type: PhysicalComposition
@@ -47,7 +47,6 @@
     tags:
     - HamsterWearable
     - WhitelistChameleon
-    - WeldingMask
 
 
 - type: entity
@@ -60,13 +59,12 @@
     sprite: Clothing/Head/Welding/flame_welding_mask.rsi
     layers:
     - state: icon
-      map: [ "enum.ToggleableVisuals.Layer" ]
+      map: [ "enum.ToggleVisuals.Layer" ]
   - type: Clothing
     sprite: Clothing/Head/Welding/flame_welding_mask.rsi
   - type: Tag
     tags:
     - WhitelistChameleon
-    - WeldingMask
 
 
 - type: entity
@@ -79,13 +77,12 @@
     sprite: Clothing/Head/Welding/blue_flame_welding_mask.rsi
     layers:
     - state: icon
-      map: [ "enum.ToggleableVisuals.Layer" ]
+      map: [ "enum.ToggleVisuals.Layer" ]
   - type: Clothing
     sprite: Clothing/Head/Welding/blue_flame_welding_mask.rsi
   - type: Tag
     tags:
     - WhitelistChameleon
-    - WeldingMask
 
 
 - type: entity
@@ -98,13 +95,12 @@
     sprite: Clothing/Head/Welding/paintedwelding.rsi
     layers:
     - state: icon
-      map: [ "enum.ToggleableVisuals.Layer" ]
+      map: [ "enum.ToggleVisuals.Layer" ]
   - type: Clothing
     sprite: Clothing/Head/Welding/paintedwelding.rsi
   - type: Tag
     tags:
     - WhitelistChameleon
-    - WeldingMask
 
 
 - type: entity

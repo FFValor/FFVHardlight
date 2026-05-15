@@ -1,6 +1,7 @@
 using Content.Shared.Item.ItemToggle;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
+using Content.Shared.Actions;
 
 namespace Content.Shared.Item.ItemToggle.Components;
 
@@ -11,6 +12,17 @@ namespace Content.Shared.Item.ItemToggle.Components;
 [RegisterComponent, NetworkedComponent, Access(typeof(ComponentTogglerSystem))]
 public sealed partial class ComponentTogglerComponent : Component
 {
+    /// <summary>
+    /// Whether the component is currently toggled on or off. Starts off.
+    /// </summary>
+    [DataField]
+    public bool Activated = false;
+    /// <summary>
+    /// Whether or not the componenttoggler can be toggled via standard interactions
+    /// (alt verbs, using in hand, etc)
+    /// </summary>
+    [DataField]
+    public bool CanInteractUse = true;
     /// <summary>
     /// The components to add when activated.
     /// </summary>
@@ -29,4 +41,7 @@ public sealed partial class ComponentTogglerComponent : Component
     /// </summary>
     [DataField]
     public bool Parent;
+}
+public sealed partial class TogglerComponentActionEvent : InstantActionEvent
+{
 }
