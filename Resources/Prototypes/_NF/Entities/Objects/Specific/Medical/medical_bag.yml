@@ -22,8 +22,8 @@
     whitelist:
       components:
         - Pill
-        - Hypospray
       tags:
+        - Hypospray
         - PillCanister
         - CentrifugeCompatible
         - Syringe
@@ -32,6 +32,8 @@
         - Bloodpack
         - Gauze
         - Bottle
+        - JetInjector
+        - Medipen
   - type: Dumpable
   - type: MagnetPickup
     magnetEnabled: false

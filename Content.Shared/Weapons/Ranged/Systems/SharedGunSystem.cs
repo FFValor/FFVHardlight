@@ -31,6 +31,7 @@ using Content.Shared.Weapons.Melee.Events;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
 using Content.Shared.Whitelist;
+using Content.Shared._CM14.Weapons.Ranged;
 using Content.Shared._RMC14.Weapons.Ranged.Prediction;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
@@ -46,6 +47,7 @@ using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using Content.Goobstation.Common.Weapons.Multishot;
+using Content.Shared.Weapons.Ranged.Events;
 
 namespace Content.Shared.Weapons.Ranged.Systems;
 
@@ -117,6 +119,7 @@ public abstract partial class SharedGunSystem : EntitySystem
         SubscribeLocalEvent<GunComponent, CycleModeEvent>(OnCycleMode);
         SubscribeLocalEvent<GunComponent, HandSelectedEvent>(OnGunSelected);
         SubscribeLocalEvent<GunComponent, MapInitEvent>(OnMapInit);
+        SubscribeLocalEvent<GunDamageModifierComponent, AmmoShotEvent>(OnGunDamageModifierAmmoShot);
 
         _physQuery = GetEntityQuery<PhysicsComponent>(); // Mono
         _projQuery = GetEntityQuery<ProjectileComponent>(); // Mono
@@ -143,6 +146,17 @@ public abstract partial class SharedGunSystem : EntitySystem
         {
             component.NextFire = melee.NextAttack;
             EntityManager.DirtyField(uid, component, nameof(GunComponent.NextFire));
+        }
+    }
+
+    private void OnGunDamageModifierAmmoShot(Entity<GunDamageModifierComponent> ent, ref AmmoShotEvent args)
+    {
+        foreach (var projectile in args.FiredProjectiles)
+        {
+            if (!_projQuery.TryGetComponent(projectile, out var comp))
+                continue;
+
+            comp.Damage *= ent.Comp.Multiplier;
         }
     }
 
@@ -304,6 +318,13 @@ public abstract partial class SharedGunSystem : EntitySystem
         if (!gun.LockOnTargetBurst || !gun.BurstActivated) // Goob edit
             gun.Target = null;
         Dirty(uid, gun);
+
+        // If running on the server, notify clients to stop any lingering muzzle-flash animations/lights
+        if (_netManager.IsServer)
+        {
+            var stopEv = new StopMuzzleFlashEvent(GetNetEntity(uid));
+            RaiseNetworkEvent(stopEv, Filter.Pvs(uid, entityManager: EntityManager));
+        }
     }
 
     /// <summary>
@@ -369,6 +390,11 @@ public abstract partial class SharedGunSystem : EntitySystem
 
         if (toCoordinates == null)
             return;
+
+        // Freeze the requested aim point in map space so burst/auto fire does not pivot with the shooter
+        // after recoil or other movement changes the gun's local transform.
+        toCoordinates = TransformSystem.ToCoordinates(TransformSystem.ToMapCoordinates(toCoordinates.Value));
+        gun.ShootCoordinates = toCoordinates;
 
         var curTime = Timing.CurTime;
 
@@ -521,8 +547,8 @@ public abstract partial class SharedGunSystem : EntitySystem
 
         // Shoot confirmed - sounds also played here in case it's invalid (e.g. cartridge already spent).
         Shoot(gunUid, gun, ev.Ammo, fromCoordinates, toCoordinates.Value, out var userImpulse, user, throwItems: attemptEv.ThrowItems);
-        var shotEv = new GunShotEvent(user, ev.Ammo, toCoordinates.Value); // Mono - pass coordinates
-        RaiseLocalEvent(gunUid, ref shotEv);
+        var shotEv = new GunShotEvent(user, gunUid, ev.Ammo, fromCoordinates, toCoordinates.Value); // Mono - pass coordinates
+        RaiseLocalEvent(gunUid, ref shotEv, broadcast: true);
 
         CauseImpulse(toCoordinates.Value, (gunUid, gun), ev.Ammo.Count);
 
@@ -841,8 +867,9 @@ public record struct AttemptShootEvent(EntityUid User, string? Message, bool Can
 ///     Raised directed on the gun after firing.
 /// </summary>
 /// <param name="User">The user that fired this gun.</param>
+/// <param name="Gun">The gun that fired.</param>
 [ByRefEvent]
-public record struct GunShotEvent(EntityUid User, List<(EntityUid? Uid, IShootable Shootable)> Ammo, EntityCoordinates ToCoordinates); // Mono - pass coordinates
+public record struct GunShotEvent(EntityUid User, EntityUid Gun, List<(EntityUid? Uid, IShootable Shootable)> Ammo, EntityCoordinates FromCoordinates, EntityCoordinates ToCoordinates); // Mono - pass coordinates
 
 public enum EffectLayers : byte
 {
