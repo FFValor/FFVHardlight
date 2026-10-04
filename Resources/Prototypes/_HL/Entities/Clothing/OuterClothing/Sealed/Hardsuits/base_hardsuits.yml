@@ -1,0 +1,94 @@
+- type: entity
+  abstract: true
+  parent: [RecyclableItemClothHardsuit, ClothingOuterBase, AllowSuitStorageClothing, ClothingConcealsBody]
+  id: ClothingOuterHardsuitBaseHL
+  name: base hardsuit
+  components:
+  - type: PressureProtection
+    highPressureMultiplier: 0.3
+    lowPressureMultiplier: 1000
+  - type: TemperatureProtection
+    heatingCoefficient: 0.01
+    coolingCoefficient: 0.01
+  - type: ClothingSpeedModifier
+    walkModifier: 0.4
+    sprintModifier: 0.6
+  - type: HeldSpeedModifier
+  - type: Item
+    size: Ginormous
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.90
+        Slash: 0.90
+        Piercing: 0.95
+        Heat: 0.90
+        Radiation: 0.25
+  - type: ToggleableClothing
+    slot: head
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:ContainerSlot {}
+      storagebase: !type:Container
+        ents: []
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+  - type: GroupExamine
+  - type: Tag
+    tags:
+    - Hardsuit
+    - WhitelistChameleon
+  - type: ProtectedFromStepTriggers
+    slots: WITHOUT_POCKET
+  - type: DamageOnInteractProtection
+    damageProtection:
+      flatReductions:
+        Heat: 10 # the average lightbulb only does around four damage!
+    slots: OUTERCLOTHING
+  - type: HarpyHideWings
+
+- type: entity
+  parent: [ClothingOuterHardsuitBase, ClothingArmorPlateLight, PowerCellSlotSmallItem]
+  id: ClothingOuterEVASuitTesting
+  name: Testing suit1
+  description: Testing
+  components:
+  - type: Sprite
+    sprite: _NF/Clothing/OuterClothing/Suits/goblin_eva_robes.rsi
+  - type: Clothing
+    sprite: _NF/Clothing/OuterClothing/Suits/goblin_eva_robes.rsi
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadEVAHelmetGoblin
+    slot: head
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:ContainerSlot
+  - type: Lock
+  - type: ItemSlotsLock
+    slots:
+    - PlateSlot
+    - cell_slot
+
+- type: entity
+  parent: [ClothingOuterHardsuitBase, ClothingArmorPlateLight, PowerCellSlotSmallItem]
+  id: ClothingOuterEVASuitTesting2
+  name: Testing suit 2
+  description: Testing
+  components:
+  - type: Sprite
+    sprite: _NF/Clothing/OuterClothing/Suits/goblin_eva_robes.rsi
+  - type: Clothing
+    sprite: _NF/Clothing/OuterClothing/Suits/goblin_eva_robes.rsi
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadEVAHelmetGoblin
+    slot: head
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:ContainerSlot
+  - type: Lock
+  - type: ItemSlotsLock
+    slots:
+    - PlateSlot
+    - cell_slot

@@ -11,7 +11,7 @@ namespace Content.Shared._Mono.ArmorPlate;
 public sealed partial class ArmorPlateHolderComponent : Component
 {
     // HardLight start: Moved plate storage to a dedicated item slot to simplify logic and allow for better interactions with container systems.
-    public const string PlateSlotId = "armor_plate";
+    public const string PlateSlotId = "PlateSlot";
 
     /// <summary>
     /// The item slot used to hold the installed armor plate.
