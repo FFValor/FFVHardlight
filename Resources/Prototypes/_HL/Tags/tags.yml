@@ -13,3 +13,15 @@
   #Vox Froguli - shoes that can be worn and won't prevent Vox innate magboots from working
 - type: Tag
   id: WhitelistVoxTalons
+
+# Tags for the various types of plating that can be installed in a suit. Not using direct ID whitelisting due to variety.
+
+- type: Tag
+  id: PlatingCombat
+
+- type: Tag
+  id: PlatingMedical
+
+- type: Tag
+  id: PlatingEngineering
+

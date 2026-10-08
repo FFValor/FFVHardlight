@@ -1,0 +1,232 @@
+- type: entity
+  abstract: true
+  id: ClothingArmorPlate
+  components:
+  - type: ArmorPlateHolder
+    plateSlot:
+      whitelist:
+        components:
+        - ArmorPlateItem
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:Container
+        showEnts: False
+        occludes: True
+        ents: []
+
+- type: entity
+  abstract: true
+  parent: ClothingArmorPlate
+  id: ClothingArmorPlateCombat
+  components:
+  - type: ArmorPlateHolder
+    plateSlot:
+      whitelist:
+        tags:
+        - PlatingCombat
+        components:
+        - ArmorPlateItem
+        requireAll: true
+      startingItem: ArmorPlateHeavyDurathread
+
+- type: entity
+  abstract: true
+  parent: ClothingArmorPlate
+  id: ClothingArmorPlateMedical
+  components:
+  - type: ArmorPlateHolder
+    plateSlot:
+      whitelist:
+        tags:
+        - PlatingMedical
+        components:
+        - ArmorPlateItem
+        requireAll: true
+      startingItem: ArmorPlateSterile
+
+- type: entity
+  abstract: true
+  parent: ClothingArmorPlate
+  id: ClothingArmorPlateEngineering
+  components:
+  - type: ArmorPlateHolder
+    plateSlot:
+      whitelist:
+        tags:
+        - PlatingEngineering
+        components:
+        - ArmorPlateItem
+        requireAll: true
+      startingItem: ArmorPlateRefractive
+
+
+# Plate prototypes
+
+
+
+# Combat plates
+
+- type: entity
+  parent: BaseItem
+  id: ArmorPlateLightDurathread
+  name: light durathread plate
+  description: A lightweight protective plate made from tough woven durathread. Capable of stopping small arms fire, but provides very little protection otherwise.
+  suffix: Combat
+  components:
+  - type: Sprite
+    sprite: _Mono/Clothing/ArmorPlate/armor_light.rsi
+    state: icon
+  - type: Item
+    sprite: _Mono/Clothing/ArmorPlate/armor_light.rsi
+    size: Normal
+  - type: ArmorPlateItem
+    maxDurability: 25
+    walkSpeedModifier: 0.94
+    sprintSpeedModifier: 0.94
+    staminaDamageMultiplier: 1.0
+    absorptionRatios:
+      Blunt: 0.05
+      Slash: 0.05
+      Piercing: 1
+  - type: Damageable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 25
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Tag
+    tags:
+    - PlatingCombat
+
+- type: entity
+  parent: BaseItem
+  id: ArmorPlateHeavyDurathread
+  name: heavy durathread plate
+  description: A bulky protective plate made from layers oftough woven durathread. Capable of stopping heavy arms fire, but provides very little protection otherwise.
+  suffix: Combat
+  components:
+  - type: Sprite
+    sprite: _Mono/Clothing/ArmorPlate/armor_light.rsi
+    state: icon
+  - type: Item
+    sprite: _Mono/Clothing/ArmorPlate/armor_light.rsi
+    size: Normal
+  - type: ArmorPlateItem
+    maxDurability: 50
+    walkSpeedModifier: 0.84
+    sprintSpeedModifier: 0.84
+    staminaDamageMultiplier: 1.0
+    damageMultipliers:
+      Piercing: 0.5
+    absorptionRatios:
+      Blunt: 0.15
+      Slash: 0.15
+      Piercing: 1
+  - type: Damageable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 60
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Tag
+    tags:
+    - PlatingCombat
+
+# Medical plates
+
+- type: entity
+  parent: BaseItem
+  id: ArmorPlateSterile
+  name: sterile plating
+  description: A lightweight padded plate made from a sterile polymer composite. Provides some measure of defense against rowdy patients, chemical spills, and passive environmental radiation.
+  suffix: Obsolete
+  components:
+  - type: Sprite
+    sprite: _Mono/Clothing/ArmorPlate/armor_obsolete.rsi
+    state: icon
+  - type: Item
+    sprite: _Mono/Clothing/ArmorPlate/armor_obsolete.rsi
+    size: Normal
+  - type: ArmorPlateItem
+    maxDurability: 60
+    walkSpeedModifier: 0.9
+    sprintSpeedModifier: 0.85
+    staminaDamageMultiplier: 1.65
+    damageMultipliers:
+      Blunt: 1.5
+      Slash: 1.5
+      Piercing: 0.5
+    absorptionRatios:
+      Blunt: 0.05
+      Slash: 0.05
+      Piercing: 0.05
+      Heat: 1
+      Radiation: 0.75
+  - type: Damageable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 60
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Tag
+    tags:
+    - PlatingMedical
+
+
+# Engineering plates
+
+- type: entity
+  parent: BaseItem
+  id: ArmorPlateRefractive
+  name: plas-uranium laminate plate
+  description: An iridescent plate manufactured by a plasma-uranium glass nanolamination process. Tuned to stop emissions in the weapons energy-band via total internal reflection.
+  suffix: Refractive
+  components:
+  - type: Sprite
+    sprite: _Mono/Clothing/ArmorPlate/armor_refractive.rsi
+    state: icon
+  - type: Item
+    sprite: _Mono/Clothing/ArmorPlate/armor_refractive.rsi
+    size: Normal
+  - type: ArmorPlateItem
+    maxDurability: 60
+    walkSpeedModifier: 0.9
+    sprintSpeedModifier: 0.9
+    staminaDamageMultiplier: 0.8
+    damageMultipliers:
+      Blunt: 5
+      Slash: 5
+      Piercing: 5
+      Heat: 0.5
+      Radiation: 0.06
+    absorptionRatios:
+      Blunt: 0.05
+      Slash: 0.05
+      Piercing: 0.05
+      Heat: 1
+      Radiation: 1
+  - type: Damageable
+    damageContainer: Inorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 60
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Tag
+    tags:
+    - PlatingEngineering

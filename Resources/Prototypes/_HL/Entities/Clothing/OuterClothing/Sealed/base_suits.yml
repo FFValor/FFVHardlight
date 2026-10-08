@@ -1,0 +1,147 @@
+- type: entity
+  abstract: true
+  parent: [RecyclableItemClothHardsuit, ClothingOuterBase, AllowSuitStorageClothing, ClothingConcealsBody]
+  id: ClothingOuterHardsuitBaseHL
+  name: base hardsuit
+  components:
+  - type: PressureProtection
+    highPressureMultiplier: 0.3
+    lowPressureMultiplier: 1000
+  - type: ToggleableTemperatureProtection
+# Meant to simulate activate heating/cooling measures in a suit.
+    activatedHeatingCoefficient: 0.01
+    activatedCoolingCoefficient: 0.01
+# Reverting to much less protection when unpowered.
+    deactivatedHeatingCoefficient: 0.75
+    deactivatedCoolingCoefficient: 0.5
+  - type: ToggleableClothingSpeedModifier
+# Meant to simulate active movement assistance/compensation in a powered suit.
+    activatedWalkModifier: 0.9
+    activatedSprintModifier: 0.9
+# Reverting to bulky, unassisted movement while unpowered.
+    deactivatedWalkModifier: 0.7
+    deactivatedSprintModifier: 0.7
+  - type: HeldSpeedModifier
+    WalkModifier: 0.7
+    SprintModifier: 0.7
+  # You shouldn't get the benefit of an movement compensating suit if it's just in your hand.
+  # Match these to the deactivated modifier.
+  - type: Item
+    size: Ginormous
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.90
+        Slash: 0.90
+        Piercing: 0.95
+        Heat: 0.90
+        Radiation: 0.25
+  - type: DamageOnInteractProtection
+    damageProtection:
+      flatReductions:
+        Heat: 10
+    slots: OUTERCLOTHING
+  - type: ToggleableClothing
+    slot: head
+  - type: ToggleClothing
+    action: ActionToggleSuitAbility
+  - type: ToggleCellDraw
+  - type: PowerCellDraw
+    drawRate: 9
+  - type: ItemToggle
+    onActivate: false
+    onUse: false
+    soundActivate:
+      path: /Audio/Weapons/click.ogg
+      params:
+        maxDistance: 1
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:ContainerSlot {}
+      storagebase: !type:Container
+        ents: []
+  - type: WiresPanel
+  - type: Wires
+    boardName: wires-board-name-clothing-hackable
+    layoutId: ClothingHackable
+    interfaces:
+      enum.WiresUiKey.Key:
+        type: WiresBoundUserInterface
+  - type: Lock
+  - type: ItemSlotsLock
+    slots:
+    - PlateSlot
+    - cell_slot
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+      enum.WiresUiKey.Key:
+        type: WiresBoundUserInterface
+  - type: GroupExamine
+  - type: Tag
+    tags:
+    - Hardsuit
+    - WhitelistChameleon
+  - type: ProtectedFromStepTriggers
+    slots: WITHOUT_POCKET
+  - type: HarpyHideWings
+
+- type: entity
+  parent: [ClothingOuterHardsuitBaseHL, ClothingArmorPlateEngineering, PowerCellSlotSmallItem]
+  id: ClothingOuterEVASuitTesting1
+  name: Testing suit engineering
+  description: Testing
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/OuterClothing/Hardsuits/assessor_exosuit.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/OuterClothing/Hardsuits/assessor_exosuit.rsi
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetHardsuitAssessor
+    slot: head
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:ContainerSlot
+  - type: AccessReader
+    access: [['Engineering']]
+
+- type: entity
+  parent: [ClothingOuterHardsuitBaseHL, ClothingArmorPlateMedical, PowerCellSlotSmallItem]
+  id: ClothingOuterEVASuitTesting2
+  name: Testing suit medical
+  description: Testing
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/OuterClothing/Hardsuits/practitioner_exosuit.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/OuterClothing/Hardsuits/practitioner_exosuit.rsi
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetHardsuitPractitioner
+    slot: head
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:ContainerSlot
+  - type: AccessReader
+    access: [['Medical']]
+
+- type: entity
+  parent: [ClothingOuterHardsuitBaseHL, ClothingArmorPlateCombat, PowerCellSlotSmallItem]
+  id: ClothingOuterEVASuitTesting3
+  name: Testing suit security
+  description: Testing
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/OuterClothing/Hardsuits/courser_exosuit.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/OuterClothing/Hardsuits/courser_exosuit.rsi
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetHardsuitCourser
+    slot: head
+  - type: ContainerContainer
+    containers:
+      toggleable-clothing: !type:ContainerSlot
+  - type: AccessReader
+    access: [['Security']]
+
+
