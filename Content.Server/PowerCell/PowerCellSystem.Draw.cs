@@ -17,7 +17,7 @@ public sealed partial class PowerCellSystem
 
         while (query.MoveNext(out var uid, out var comp, out var slot))
         {
-            if (!comp.Enabled)
+            if (!comp.Enabled || comp.PowerDisabled)
                 continue;
 
             if (Timing.CurTime < comp.NextUpdateTime)

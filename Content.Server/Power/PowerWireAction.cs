@@ -2,9 +2,11 @@ using Content.Server.Electrocution;
 using Content.Shared.Electrocution;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
+using Content.Server.PowerCell;
 using Content.Server.Wires;
 using Content.Shared.Emp; // Frontier: Upstream - #28984
 using Content.Shared.Power;
+using Content.Shared.PowerCell;
 using Content.Shared.Wires;
 
 namespace Content.Server.Power;
@@ -20,6 +22,7 @@ public sealed partial class PowerWireAction : BaseWireAction
     private int _pulseTimeout = 30;
 
     private ElectrocutionSystem _electrocution = default!;
+    private PowerCellSystem _powerCell = default!;
 
     public override object StatusKey { get; } = PowerWireActionKey.Status;
 
@@ -58,22 +61,24 @@ public sealed partial class PowerWireAction : BaseWireAction
     // Getting it from a dictionary is significantly more expensive.
     private void SetPower(EntityUid owner, bool pulsed)
     {
-        if (!EntityManager.TryGetComponent(owner, out ApcPowerReceiverComponent? power))
-        {
-            return;
-        }
-
+        var hasPowerReceiver = EntityManager.TryGetComponent(owner, out ApcPowerReceiverComponent? power);
         var receiverSys = EntityManager.System<PowerReceiverSystem>();
 
         if (pulsed)
         {
-            receiverSys.SetPowerDisabled(owner, true, power);
+            if (hasPowerReceiver)
+                receiverSys.SetPowerDisabled(owner, true, power);
+
+            _powerCell.SetPowerDisabled(owner, true);
             return;
         }
 
         if (AllWiresCut(owner))
         {
-            receiverSys.SetPowerDisabled(owner, true, power);
+            if (hasPowerReceiver)
+                receiverSys.SetPowerDisabled(owner, true, power);
+
+            _powerCell.SetPowerDisabled(owner, true);
         }
         else
         {
@@ -83,7 +88,10 @@ public sealed partial class PowerWireAction : BaseWireAction
                 return;
             }
 
-            receiverSys.SetPowerDisabled(owner, false, power);
+            if (hasPowerReceiver)
+                receiverSys.SetPowerDisabled(owner, false, power);
+
+            _powerCell.SetPowerDisabled(owner, false);
         }
     }
 
@@ -166,6 +174,7 @@ public sealed partial class PowerWireAction : BaseWireAction
         base.Initialize();
 
         _electrocution = EntityManager.System<ElectrocutionSystem>();
+        _powerCell = EntityManager.System<PowerCellSystem>();
     }
 
     // This should add a wire into the entity's state, whether it be

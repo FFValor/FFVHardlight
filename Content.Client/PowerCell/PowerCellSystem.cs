@@ -24,7 +24,7 @@ public sealed class PowerCellSystem : SharedPowerCellSystem
         if (!Resolve(uid, ref battery, ref cell, false))
             return true;
 
-        return battery.CanUse;
+        return !battery.PowerDisabled && battery.CanUse;
     }
 
     /// <inheritdoc/>
@@ -37,7 +37,7 @@ public sealed class PowerCellSystem : SharedPowerCellSystem
         if (!Resolve(uid, ref battery, ref cell, false))
             return true;
 
-        return battery.CanDraw;
+        return !battery.PowerDisabled && battery.CanDraw;
     }
 
     private void OnPowerCellVisualsChange(EntityUid uid, PowerCellVisualsComponent component, ref AppearanceChangeEvent args)

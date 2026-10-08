@@ -7,6 +7,9 @@ namespace Content.Server.Atmos.Components;
 public sealed partial class PressureProtectionComponent : Component
 {
     [DataField]
+    public bool Enabled = true;
+
+    [DataField]
     public float HighPressureMultiplier = 1f;
 
     [DataField]

@@ -37,6 +37,12 @@ public sealed partial class PowerCellDrawComponent : Component
     public bool Enabled = true;
 
     /// <summary>
+    /// Whether power draw is disabled by an external source, such as a cut power wire.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public bool PowerDisabled;
+
+    /// <summary>
     /// How much the entity draws while the UI is open.
     /// Set to 0 if you just wish to check for power upon opening the UI.
     /// </summary>

@@ -8,6 +8,8 @@ using Content.Shared.Atmos;
 using Content.Shared.Damage;
 using Content.Shared.Database;
 using Content.Shared.Inventory;
+using Content.Shared.Item.ItemToggle;
+using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Rejuvenate;
 using Content.Shared.Temperature;
 using Robust.Shared.Physics.Components;
@@ -24,6 +26,7 @@ public sealed class TemperatureSystem : EntitySystem
     [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly IAdminLogManager _adminLogger = default!;
     [Dependency] private readonly TemperatureSystem _temperature = default!;
+    [Dependency] private readonly ItemToggleSystem _toggle = default!;
 
     /// <summary>
     ///     All the components that will have their damage updated at the end of the tick.
@@ -46,6 +49,8 @@ public sealed class TemperatureSystem : EntitySystem
         SubscribeLocalEvent<AlertsComponent, OnTemperatureChangeEvent>(ServerAlert);
         SubscribeLocalEvent<TemperatureProtectionComponent, InventoryRelayedEvent<ModifyChangedTemperatureEvent>>(
             OnTemperatureChangeAttempt);
+        SubscribeLocalEvent<ToggleableTemperatureProtectionComponent, ComponentStartup>(OnToggleableTemperatureStartup);
+        SubscribeLocalEvent<ToggleableTemperatureProtectionComponent, ItemToggledEvent>(OnToggleableTemperatureToggled);
 
         SubscribeLocalEvent<InternalTemperatureComponent, MapInitEvent>(OnInit);
 
@@ -309,6 +314,35 @@ public sealed class TemperatureSystem : EntitySystem
         RaiseLocalEvent(uid, ref ev);
 
         args.Args.TemperatureDelta *= ev.Coefficient;
+    }
+
+    private void OnToggleableTemperatureStartup(Entity<ToggleableTemperatureProtectionComponent> ent,
+        ref ComponentStartup args)
+    {
+        if (!TryComp<TemperatureProtectionComponent>(ent.Owner, out var protection))
+            protection = EntityManager.AddComponent<TemperatureProtectionComponent>(ent.Owner);
+
+        ApplyTemperatureProtection(ent.Comp, protection, _toggle.IsActivated(ent.Owner));
+    }
+
+    private void OnToggleableTemperatureToggled(Entity<ToggleableTemperatureProtectionComponent> ent,
+        ref ItemToggledEvent args)
+    {
+        if (!TryComp<TemperatureProtectionComponent>(ent.Owner, out var protection))
+            protection = EntityManager.AddComponent<TemperatureProtectionComponent>(ent.Owner);
+
+        ApplyTemperatureProtection(ent.Comp, protection, args.Activated);
+    }
+
+    private static void ApplyTemperatureProtection(ToggleableTemperatureProtectionComponent toggleable,
+        TemperatureProtectionComponent protection, bool activated)
+    {
+        protection.HeatingCoefficient = activated
+            ? toggleable.ActivatedHeatingCoefficient
+            : toggleable.DeactivatedHeatingCoefficient;
+        protection.CoolingCoefficient = activated
+            ? toggleable.ActivatedCoolingCoefficient
+            : toggleable.DeactivatedCoolingCoefficient;
     }
 
     private void ChangeTemperatureOnCollide(Entity<ChangeTemperatureOnCollideComponent> ent, ref ProjectileHitEvent args)

@@ -1,0 +1,9 @@
+- type: wireLayout
+  id: ClothingHackable
+  dummyWires: 3
+  wires:
+  - !type:PowerWireAction
+  - !type:PowerWireAction
+    pulseTimeout: 15
+  - !type:AccessWireAction
+  - !type:PressureWireAction

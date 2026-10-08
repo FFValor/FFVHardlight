@@ -103,6 +103,15 @@ public abstract class SharedPowerCellSystem : EntitySystem
         Dirty(ent, ent.Comp);
     }
 
+    public void SetPowerDisabled(Entity<PowerCellDrawComponent?> ent, bool disabled)
+    {
+        if (!Resolve(ent, ref ent.Comp, false) || ent.Comp.PowerDisabled == disabled)
+            return;
+
+        ent.Comp.PowerDisabled = disabled;
+        Dirty(ent, ent.Comp);
+    }
+
     /// <summary>
     /// Returns whether the entity has a slotted battery and <see cref="PowerCellDrawComponent.UseRate"/> charge.
     /// </summary>

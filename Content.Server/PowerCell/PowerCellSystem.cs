@@ -99,7 +99,7 @@ public sealed partial class PowerCellSystem : SharedPowerCellSystem
         if (!Resolve(uid, ref battery, ref cell, false))
             return true;
 
-        return HasCharge(uid, battery.UseRate, cell, user);
+        return !battery.PowerDisabled && HasCharge(uid, battery.UseRate, cell, user);
     }
 
     /// <summary>
@@ -111,6 +111,9 @@ public sealed partial class PowerCellSystem : SharedPowerCellSystem
         // Default to true if we don't have the components.
         if (!Resolve(uid, ref battery, ref cell, false))
             return true;
+
+        if (battery.PowerDisabled)
+            return false;
 
         if (TryUseCharge(uid, battery.UseRate, cell, user))
         {
@@ -132,7 +135,7 @@ public sealed partial class PowerCellSystem : SharedPowerCellSystem
         if (!Resolve(uid, ref battery, ref cell, false))
             return true;
 
-        return HasCharge(uid, battery.DrawRate, cell, user);
+        return !battery.PowerDisabled && HasCharge(uid, battery.DrawRate, cell, user);
     }
 
     #endregion
@@ -167,6 +170,9 @@ public sealed partial class PowerCellSystem : SharedPowerCellSystem
     /// </summary>
     public bool TryUseCharge(EntityUid uid, float charge, PowerCellSlotComponent? component = null, EntityUid? user = null)
     {
+        if (TryComp<PowerCellDrawComponent>(uid, out var draw) && draw.PowerDisabled)
+            return false;
+
         if (!TryGetBatteryFromSlot(uid, out var batteryEnt, out var battery, component))
         {
             if (user != null)

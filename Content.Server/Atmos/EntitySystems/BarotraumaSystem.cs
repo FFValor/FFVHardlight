@@ -139,6 +139,29 @@ namespace Content.Server.Atmos.EntitySystems
             }
         }
 
+        public bool IsPressureProtectionEnabled(EntityUid uid)
+        {
+            return TryComp<PressureProtectionComponent>(uid, out var protection) && protection.Enabled;
+        }
+
+        public void SetPressureProtectionEnabled(EntityUid uid, bool enabled)
+        {
+            if (!TryComp<PressureProtectionComponent>(uid, out var protection) || protection.Enabled == enabled)
+                return;
+
+            protection.Enabled = enabled;
+            Dirty(uid, protection);
+
+            if (_inventorySystem.TryGetContainingEntity(uid, out var wearer))
+                RefreshCachedResistances(wearer.Value);
+        }
+
+        public void RefreshCachedResistances(EntityUid uid)
+        {
+            if (TryComp<BarotraumaComponent>(uid, out var barotrauma))
+                UpdateCachedResistances(uid, barotrauma);
+        }
+
         /// <summary>
         /// Returns adjusted pressure after having applied resistances from equipment and innate (if any), to check against a low pressure hazard threshold
         /// </summary>
@@ -182,6 +205,15 @@ namespace Content.Server.Atmos.EntitySystems
                 return false;
 
             var comp = ent.Comp;
+            if (!comp.Enabled)
+            {
+                highMultiplier = 1f;
+                highModifier = 0f;
+                lowMultiplier = 1f;
+                lowModifier = 0f;
+                return true;
+            }
+
             var ev = new GetPressureProtectionValuesEvent
             {
                 HighPressureMultiplier = comp.HighPressureMultiplier,
