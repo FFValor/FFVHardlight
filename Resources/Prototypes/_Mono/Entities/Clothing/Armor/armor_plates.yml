@@ -127,48 +127,6 @@
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
 
-#PLATE EXPANSION PACK
-# Refractive
-- type: entity
-  parent: BaseItem
-  id: ArmorPlateRefractive
-  name: plas-uranium laminate plate
-  description: An iridescent plate manufactured by a plasma-uranium glass nanolamination process proprietary to Union Wrightworks. Tuned to stop emissions in the weapons energy-band via total internal reflection.
-  suffix: Refractive
-  components:
-  - type: Sprite
-    sprite: _Mono/Clothing/ArmorPlate/armor_refractive.rsi
-    state: icon
-  - type: Item
-    sprite: _Mono/Clothing/ArmorPlate/armor_refractive.rsi
-    size: Normal
-  - type: ArmorPlateItem
-    maxDurability: 60
-    walkSpeedModifier: 0.9
-    sprintSpeedModifier: 0.9
-    staminaDamageMultiplier: 0.8
-    damageMultipliers:
-      Blunt: 5
-      Slash: 5
-      Piercing: 5
-      Heat: 0.75
-    absorptionRatios:
-      Blunt: 0.05
-      Slash: 0.05
-      Piercing: 0.05
-      Heat: 1
-      Radiation: 0.5
-  - type: Damageable
-    damageContainer: Inorganic
-  - type: Destructible
-    thresholds:
-    - trigger:
-        !type:DamageTrigger
-        damage: 60
-      behaviors:
-      - !type:DoActsBehavior
-        acts: [ "Destruction" ]
-        
 # Steel
 - type: entity
   parent: BaseItem
@@ -200,7 +158,7 @@
     thresholds:
     - trigger:
         !type:DamageTrigger
-        damage: 60 
+        damage: 60
       behaviors:
       - !type:DoActsBehavior
         acts: [ "Destruction" ]
