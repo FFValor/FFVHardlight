@@ -56,12 +56,26 @@ public sealed partial class ShuttleConsoleSystem
         if (!Resolve(uid, ref sourceComp))
             return null;
 
+        if (sourceComp.Entity is { } cachedUid &&
+            Exists(cachedUid) &&
+            TryComp(cachedUid, out ShuttleConsoleComponent? _) &&
+            TryComp(cachedUid, out NFDroneConsoleTargetComponent? cachedTarget) &&
+            sourceComp.Id == cachedTarget.Id)
+        {
+            return cachedUid;
+        }
+
+        sourceComp.Entity = null;
+
         var query = AllEntityQuery<ShuttleConsoleComponent, NFDroneConsoleTargetComponent>();
 
         while (query.MoveNext(out var cUid, out _, out var targetComp))
         {
             if (sourceComp.Id == targetComp.Id)
+            {
+                sourceComp.Entity = cUid;
                 return cUid;
+            }
         }
 
         return null;

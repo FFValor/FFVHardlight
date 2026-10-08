@@ -1,0 +1,19 @@
+- type: entity
+  parent: [BaseStructureDisableToolUse, BaseStructureIndestructible, BaseStructureAccessReaderImmuneToEmag, ComputerShuttle, BaseShuttleIntercom, BaseComputerTraffic]
+  id: ComputerShuttleReceiver
+  name: remote shuttle receiver
+  description: Receives traffic from the remote shuttle console.
+  suffix: Receiver
+  components:
+  - type: NFDroneConsoleTarget
+    id: EidolonTug
+
+- type: entity
+  parent: [BaseStructureDisableToolUse, BaseStructureIndestructible, BaseStructureAccessReaderImmuneToEmag, BaseComputerShuttle, BaseComputerTraffic]
+  id: ComputerShuttleRemote
+  name: remote shuttle console
+  description: Sends traffic to the remote shuttle receiver.
+  suffix: Remote
+  components:
+  - type: NFDroneConsole
+    id: EidolonTug

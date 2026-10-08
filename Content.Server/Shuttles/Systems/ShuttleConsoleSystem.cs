@@ -346,18 +346,15 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
 
     private void UpdateState(EntityUid consoleUid, ref DockingInterfaceState? dockState)
     {
-        EntityUid? entity = consoleUid;
-
         var getShuttleEv = new ConsoleShuttleEvent
         {
-            Console = entity,
+            Console = consoleUid,
         };
 
-        var entityUid = entity ?? consoleUid;
-        RaiseLocalEvent(entityUid, ref getShuttleEv);
-        entity = getShuttleEv.Console ?? entityUid;
+        RaiseLocalEvent(consoleUid, ref getShuttleEv);
+        var entityUid = getShuttleEv.Console ?? consoleUid;
 
-        TryComp(entity, out TransformComponent? consoleXform);
+        TryComp(entityUid, out TransformComponent? consoleXform);
         var shuttleGridUid = consoleXform?.GridUid;
 
         NavInterfaceState navState;
@@ -456,7 +453,10 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
     // HL: WEP message handler
     private void OnWEPMessage(Entity<ShuttleConsoleComponent> ent, ref ShuttleConsoleWEPMessage args)
     {
-        var xform = Transform(ent.Owner);
+        var consoleUid = GetDroneConsole(ent.Owner);
+        if (consoleUid == null || !_xformQuery.TryGetComponent(consoleUid.Value, out var xform))
+            return;
+
         if (xform.GridUid is not { } gridUid || !TryComp<ShuttleComponent>(gridUid, out var shuttle))
             return;
 
@@ -598,7 +598,7 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
 
     public void AddPilot(EntityUid uid, EntityUid entity, ShuttleConsoleComponent component)
     {
-        if (!EntityManager.TryGetComponent(entity, out PilotComponent? pilotComponent)
+        if (!TryComp(entity, out PilotComponent? pilotComponent)
         || component.SubscribedPilots.Contains(entity))
         {
             return;
@@ -612,7 +612,7 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
 
         pilotComponent.Console = uid;
         ActionBlockerSystem.UpdateCanMove(entity);
-        pilotComponent.Position = EntityManager.GetComponent<TransformComponent>(entity).Coordinates;
+        pilotComponent.Position = Comp<TransformComponent>(entity).Coordinates;
         Dirty(entity, pilotComponent);
     }
 
@@ -635,12 +635,12 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
         _popup.PopupEntity(Loc.GetString("shuttle-pilot-end"), pilotUid, pilotUid);
 
         if (pilotComponent.LifeStage < ComponentLifeStage.Stopping)
-            EntityManager.RemoveComponent<PilotComponent>(pilotUid);
+            RemComp<PilotComponent>(pilotUid);
     }
 
     public void RemovePilot(EntityUid entity)
     {
-        if (!EntityManager.TryGetComponent(entity, out PilotComponent? pilotComponent))
+        if (!TryComp(entity, out PilotComponent? pilotComponent))
             return;
 
         RemovePilot(entity, pilotComponent);
