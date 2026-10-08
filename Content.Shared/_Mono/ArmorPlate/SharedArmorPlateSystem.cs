@@ -84,7 +84,9 @@ public sealed class SharedArmorPlateSystem : EntitySystem
         if (!_inventory.TryGetSlots(ent, out var slots))
             return;
 
-        if (args.Origin == null && args.OriginFlag != DamageableSystem.DamageOriginFlag.Explosion)
+        if (args.Origin == null
+            && args.OriginFlag != DamageableSystem.DamageOriginFlag.Explosion
+            && !IsRadiationOnlyDamage(args.Damage))
             return;
 
         foreach (var slot in slots)
@@ -116,6 +118,17 @@ public sealed class SharedArmorPlateSystem : EntitySystem
             foreach (var (type, amt) in remainder.DamageDict)
                 args.Damage.DamageDict.Add(type, amt);
         }
+    }
+
+    private static bool IsRadiationOnlyDamage(DamageSpecifier damage)
+    {
+        foreach (var (type, amount) in damage.DamageDict)
+        {
+            if (amount > FixedPoint2.Zero && type != "Radiation")
+                return false;
+        }
+
+        return true;
     }
 
     private void AbsorbDamage(
