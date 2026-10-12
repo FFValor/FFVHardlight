@@ -35,7 +35,7 @@
   parent: [ComputerShuttleReceiverBase]
   id: ComputerShuttleReceiverSecurityTug
   name: security tug receiver server
-  description: Receives controls from the warden's control console. Manual control via this server still requires armory access. No renegades.
+  description: Receives maneuvering input from the warden's control console. Manual piloting via this server still requires armory access. No renegades.
   components:
   - type: NFDroneConsoleTarget
     id: SecurityTug
@@ -49,7 +49,7 @@
   parent: [ComputerShuttleReceiverBase]
   id: ComputerShuttleReceiverSalvageTug
   name: salvage tug receiver server
-  description: Receives controls from the salvage control console. Manual control via this server requires Quartermaster access. No joyrides.
+  description: Receives maneuvering input from the salvage control console. Manual piloting via this server requires Quartermaster access. No joyrides.
   components:
   - type: NFDroneConsoleTarget
     id: SalvageTug
@@ -63,7 +63,7 @@
   parent: [ComputerShuttleReceiverBase]
   id: ComputerShuttleReceiverStationTug
   name: harbormaster's tug receiver server
-  description: Receives controls from the harbormaster's control console. Manual control via this server requires command access. No coups.
+  description: Receives maneuvering input from the harbormaster's control console. Manual piloting via this server requires command access. No coups.
   components:
   - type: NFDroneConsoleTarget
     id: HarborTug
@@ -71,6 +71,44 @@
   - type: AccessReader
     access:
     - [ Command ]
+
+- type: entity
+  parent: [ComputerShuttleReceiverBase]
+  id: ComputerShuttleReceiverBackupTug1
+  name: backup tug receiver server "A"
+  description: Receives maneuvering input from a backup control console. Manual piloting via this server requires command access.
+  components:
+  - type: NFDroneConsoleTarget
+    id: BackupTug1
+  - type: ActivatableUIRequiresAccess
+  - type: AccessReader
+    access:
+    - [ Command ]
+
+- type: entity
+  parent: [ComputerShuttleReceiverBase]
+  id: ComputerShuttleReceiverBackupTug2
+  name: backup tug receiver server "B"
+  description: Receives maneuvering input from a backup control console. Manual piloting via this server requires command access.
+  components:
+  - type: NFDroneConsoleTarget
+    id: BackupTug2
+  - type: ActivatableUIRequiresAccess
+  - type: AccessReader
+    access:
+    - [ Command ]
+
+- type: entity
+  parent: [ComputerShuttleReceiverBase]
+  id: ComputerShuttleReceiverEidolonWarship
+  name: autonomous warship receiver server
+  description: Receives maneuvering input from a stationside control console. Manual piloting via this server requires command access or direct AI controls.
+  components:
+  - type: NFDroneConsoleTarget
+    id: ADVRelic
+  - type: ActivatableUIRequiresAccess
+  - type: AccessReader
+    access: [["StationAi"], ["Command"]]
 
 # Remotes
 
@@ -170,6 +208,79 @@
       state: generic_panel_open
   - type: NFDroneConsole
     id: HarborTug
+  - type: ActivatableUIRequiresAccess
+  - type: AccessReader
+    access: [["StationAi"], ["Command"]]
+
+- type: entity
+  parent: [ComputerShuttleRemoteBase]
+  id: ComputerShuttleRemoteEidolonWarship
+  name: remote warship piloting console
+  description: Remotely controls the ADV Relic's flight systems. Useful for assissting in piloting maneuvers. Does not replace AI core loyalty, use with caution.
+  components:
+  - type: Sprite
+    layers:
+    - map: ["computerLayerBody"]
+      state: computer
+    - map: ["computerLayerKeyboard"]
+      state: generic_keyboard
+    - map: ["computerLayerScreen"]
+      state: dna
+    - map: ["computerLayerKeys"]
+      state: generic_keys
+    - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
+      state: generic_panel_open
+  - type: NFDroneConsole
+    id: ADVRelic
+  - type: ActivatableUIRequiresAccess
+  - type: AccessReader
+    access: [["StationAi"], ["Command"]]
+
+- type: entity
+  parent: [ComputerShuttleRemoteBase]
+  id: ComputerShuttleRemoteBackupTug1
+  name: backup remote tug console "A"
+  description: Remotely controls a backup shuttle tug. Useful for shouldering the duties of another tug, should it be destroyed.
+  components:
+  - type: Sprite
+    layers:
+    - map: ["computerLayerBody"]
+      state: computer
+    - map: ["computerLayerKeyboard"]
+      state: generic_keyboard
+    - map: ["computerLayerScreen"]
+      state: dna
+    - map: ["computerLayerKeys"]
+      state: generic_keys
+    - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
+      state: generic_panel_open
+  - type: NFDroneConsole
+    id: BackupTug1
+  - type: ActivatableUIRequiresAccess
+  - type: AccessReader
+    access: [["StationAi"], ["Command"]]
+
+- type: entity
+  parent: [ComputerShuttleRemoteBase]
+  id: ComputerShuttleRemoteBackupTug2
+  name: backup remote tug console "B"
+  suffix: Do Not Map
+  description: Remotely controls a backup shuttle tug. Useful for shouldering the duties of another tug, should it be destroyed.
+  components:
+  - type: Sprite
+    layers:
+    - map: ["computerLayerBody"]
+      state: computer
+    - map: ["computerLayerKeyboard"]
+      state: generic_keyboard
+    - map: ["computerLayerScreen"]
+      state: dna
+    - map: ["computerLayerKeys"]
+      state: generic_keys
+    - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
+      state: generic_panel_open
+  - type: NFDroneConsole
+    id: BackupTug2
   - type: ActivatableUIRequiresAccess
   - type: AccessReader
     access: [["StationAi"], ["Command"]]
